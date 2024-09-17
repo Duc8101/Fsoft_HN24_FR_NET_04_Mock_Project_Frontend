@@ -8,9 +8,14 @@ import { Component } from '@angular/core';
   styleUrl: './customer-footer.component.scss'
 })
 export class CustomerFooterComponent {
+  //fadsfadsfads
   phone: string = '0966390661'
+  //fdasfasdfads
   mail: string = 'phoneshop@gmail.com'
+  //dsafadsfdasf
+  //fadsfadsfads
   address: string = 'Twitter beans, FPT Hà Nội'
+  //fasdfasdfadsf
   currentYear: number = new Date().getFullYear();
   noCopyright: string;
 
