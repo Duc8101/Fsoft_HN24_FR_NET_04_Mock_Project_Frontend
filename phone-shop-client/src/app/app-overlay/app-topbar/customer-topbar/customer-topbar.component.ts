@@ -6,6 +6,7 @@ import { DividerModule } from 'primeng/divider';
 import { ChartModule } from 'primeng/chart';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
+import { LayoutService } from '../../../layout-service/app.layout.service';
 
 @Component({
   selector: 'app-customer-topbar',
@@ -15,5 +16,5 @@ import { ButtonModule } from 'primeng/button';
   styleUrl: './customer-topbar.component.scss'
 })
 export class CustomerTopbarComponent {
-  constructor(public router: Router) { }
+  constructor(public layoutService: LayoutService, public router: Router) { }
 }
