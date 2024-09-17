@@ -9,7 +9,11 @@ import { Component } from '@angular/core';
 })
 export class CustomerFooterComponent {
   phone: string = '0966390661'
+  //fadsfasdff
+  //fadsfadsfads
   mail: string = 'phoneshop@gmail.com'
+  //fdasfads fsdafasdf
+  //fdafadsfadsf
   address: string = 'Twitter beans, FPT Hà Nội'
   currentYear: number = new Date().getFullYear();
   noCopyright: string;
