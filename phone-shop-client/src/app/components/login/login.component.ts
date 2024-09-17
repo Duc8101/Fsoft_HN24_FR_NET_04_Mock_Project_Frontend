@@ -1,12 +1,22 @@
+<<<<<<< Updated upstream:phone-shop-client/src/login/login.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Login } from '../data/login';
+=======
+import { Component } from '@angular/core';
+>>>>>>> Stashed changes:phone-shop-client/src/app/components/login/login.component.ts
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { ApiService } from '../api/api.services';
-import { ApiUrls } from '../api/api-url';
 import { HttpHeaders } from '@angular/common/http';
-import { Media } from '../data/media';
 import { CheckboxModule } from 'primeng/checkbox';
+<<<<<<< Updated upstream:phone-shop-client/src/login/login.component.ts
+=======
+import { Router } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { ApiService } from '../../services/api-services/api.services';
+import { Media } from '../../services/api-services/media';
+import { ApiUrls } from '../../services/api-services/api-url';
+import { Login } from '../../models/login';
+>>>>>>> Stashed changes:phone-shop-client/src/app/components/login/login.component.ts
 
 @Component({
   selector: 'app-login',
@@ -55,7 +65,12 @@ export class LoginComponent {
     const data = JSON.stringify(login);
 
     const headers = new HttpHeaders({
+<<<<<<< Updated upstream:phone-shop-client/src/login/login.component.ts
       'Content-Type': Media.CONTENT_TYPE
+=======
+      'Content-Type': Media.CONTENT_TYPE,
+      
+>>>>>>> Stashed changes:phone-shop-client/src/app/components/login/login.component.ts
     });
     let token = localStorage.getItem('token');
 
