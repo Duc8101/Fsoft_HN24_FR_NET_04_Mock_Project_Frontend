@@ -6,11 +6,12 @@ import { ApiService } from '../api/api.services';
 import { ApiUrls } from '../api/api-url';
 import { HttpHeaders } from '@angular/common/http';
 import { Media } from '../data/media';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule,CheckboxModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
