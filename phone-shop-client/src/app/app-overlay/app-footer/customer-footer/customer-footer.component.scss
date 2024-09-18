@@ -3,9 +3,6 @@
         display: flex;
         flex-direction: column;
         width: 100%;
-        position: absolute;
-        bottom:0;
-        padding: 1rem 5rem !important;
 
         .footer-content{
             display: flex;
@@ -80,9 +77,6 @@
             background: linear-gradient(90deg, #0f67ae, #f17126, #13af49);
             color: #f7f7f7;
             text-align: center;
-            position: absolute;
-            bottom: 0.5rem;
-            left: 0;
             padding: 5px;
 
         }

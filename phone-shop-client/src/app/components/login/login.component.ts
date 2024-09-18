@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
-import { Login } from '../data/login';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { ApiService } from '../api/api.services';
-import { ApiUrls } from '../api/api-url';
 import { HttpHeaders } from '@angular/common/http';
-import { Media } from '../data/media';
 import { CheckboxModule } from 'primeng/checkbox';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { ApiService } from '../../services/api/api.services';
+import { Login } from '../../models/login';
+import { Media } from '../../services/api/media';
+import { ApiUrls } from '../../services/api/api-url';
 
 @Component({
   selector: 'app-login',
