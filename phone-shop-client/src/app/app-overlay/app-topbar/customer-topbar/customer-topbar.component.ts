@@ -27,5 +27,6 @@ export class CustomerTopbarComponent {
   searchProduct(){
     this.dataService.setSearchName(this.searchName);
     this.dataService.triggerFunctionCall();
+    this.router.navigate(['/search']); 
   }
 }
