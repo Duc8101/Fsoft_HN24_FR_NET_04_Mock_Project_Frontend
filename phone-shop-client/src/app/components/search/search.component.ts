@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { DataView } from 'primeng/dataview';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
+import { DataService } from '../../services/data.service';
 
 
 @Component({
@@ -45,11 +46,15 @@ export class SearchComponent implements OnInit {
 
   constructor(
     private readonly apiService: ApiService,
-    private readonly routers: Router
+    private readonly routers: Router,
+    private readonly dataService: DataService
   ) {}
 
   ngOnInit() {
     this.getData();
+    this.dataService.callFunction$.subscribe(() => {
+      this.getData();
+    });
     this.sourceCities = [
       { name: 'San Francisco', code: 'SF' },
       { name: 'London', code: 'LDN' },
@@ -79,8 +84,8 @@ export class SearchComponent implements OnInit {
   }
 
   getData() {
-    //?pageSize=10&currentPage=1
     let parameters: Map<string, any> = new Map();
+    parameters.set("name",this.dataService.getSearchName());
     parameters.set("pageSize", 10);
     parameters.set("currentPage", 1);
 
@@ -101,6 +106,7 @@ export class SearchComponent implements OnInit {
           console.error('Có lỗi xảy ra : ', error);
         }
       );
+      this.dataService.setSearchName("");
   }
 
   onSortChange(event: any) {
