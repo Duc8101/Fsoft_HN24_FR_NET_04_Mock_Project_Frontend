@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { HttpHeaders } from '@angular/common/http';
@@ -9,6 +9,7 @@ import { ApiService } from '../../services/api/api.services';
 import { Login } from '../../models/login';
 import { Media } from '../../services/api/media';
 import { ApiUrls } from '../../services/api/api-url';
+import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'app-login',
@@ -17,11 +18,13 @@ import { ApiUrls } from '../../services/api/api-url';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   error = '';
   formLogin: FormGroup;
+  test: number = 0;
 
-  constructor(private readonly formBuilder: FormBuilder, private readonly apiService: ApiService, private readonly router: Router) {
+  constructor(private readonly formBuilder: FormBuilder, private readonly apiService: ApiService, 
+    private readonly router: Router, private readonly dataService: DataService) {
     this.formLogin = this.formBuilder.group({
       username: this.formBuilder.control('', [Validators.required, this.noWhitespaceValidator()]),
       password: this.formBuilder.control('', [Validators.required, this.noWhitespaceValidator()]),
@@ -58,7 +61,6 @@ export class LoginComponent {
       'Content-Type': Media.CONTENT_TYPE,
       'Authorization': ''
     });
-
     this.apiService.post(ApiUrls.URL_LOGIN, data, headers).subscribe(
       response => {
         const code = response.code;
@@ -84,6 +86,16 @@ export class LoginComponent {
         console.error('Có lỗi xảy ra : ', error);
       }
     );
+  }
+
+  ngOnInit(): void {
+    this.test = this.dataService.getCartLength();
+  }
+
+  plusNumber(){
+    this.test +=1;
+    this.dataService.setCartLength(this.test);
+    console.log(this.test)
   }
 
 }
