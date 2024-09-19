@@ -1,35 +1,31 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { DataViewModule } from 'primeng/dataview';
-import { RatingModule } from 'primeng/rating';
-import { ButtonModule } from 'primeng/button';
 import { Product } from '../../models/product';
 import { SelectItem } from 'primeng/api';
 import { ApiService } from '../../services/api/api.services';
 import { Router } from '@angular/router';
-import { DataView } from 'primeng/dataview';
+import { ButtonModule } from 'primeng/button';
+import { RatingModule } from 'primeng/rating';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-import { DataService } from '../../services/data.service';
-import { ApiUrls } from '../../services/api/api-url';
-
+import { DataViewModule } from 'primeng/dataview';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { DataView } from 'primeng/dataview';
 
 @Component({
-  selector: 'app-search',
+  selector: 'app-all-product',
   standalone: true,
   imports: [CommonModule,
-    FormsModule,
-    DataViewModule,
-    InputTextModule,
-    DropdownModule,
-    RatingModule,
-    ButtonModule],
-  templateUrl: './search.component.html',
-  styleUrl: './search.component.scss',
+		FormsModule,
+		DataViewModule,
+		InputTextModule,
+		DropdownModule,
+		RatingModule,
+		ButtonModule],
+  templateUrl: './all-product.component.html',
+  styleUrl: './all-product.component.scss'
 })
-
-export class SearchComponent implements OnInit {
+export class AllProductComponent implements OnInit {
   error = '';
   products: Product[] = [];
 
@@ -47,15 +43,11 @@ export class SearchComponent implements OnInit {
 
   constructor(
     private readonly apiService: ApiService,
-    private readonly routers: Router,
-    private readonly dataService: DataService
-  ) { }
+    private readonly routers: Router
+  ) {}
 
   ngOnInit() {
     this.getData();
-    this.dataService.callFunction$.subscribe(() => {
-      this.getData();
-    });
     this.sourceCities = [
       { name: 'San Francisco', code: 'SF' },
       { name: 'London', code: 'LDN' },
@@ -85,13 +77,13 @@ export class SearchComponent implements OnInit {
   }
 
   getData() {
+    //?pageSize=10&currentPage=1
     let parameters: Map<string, any> = new Map();
-    parameters.set("name", this.dataService.getSearchName());
     parameters.set("pageSize", 10);
     parameters.set("currentPage", 1);
 
     this.apiService
-      .get(ApiUrls.URL_GET_ALL_PRODUCTS, parameters)
+      .get('http://localhost:5125/Product/get-all-products', parameters)
       .subscribe(
         (response) => {
           const code = response.code;
@@ -107,7 +99,6 @@ export class SearchComponent implements OnInit {
           console.error('Có lỗi xảy ra : ', error);
         }
       );
-    this.dataService.setSearchName("");
   }
 
   onSortChange(event: any) {
@@ -126,3 +117,4 @@ export class SearchComponent implements OnInit {
     dv.filter((event.target as HTMLInputElement).value);
   }
 }
+

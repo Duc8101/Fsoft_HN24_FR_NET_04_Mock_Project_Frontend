@@ -45,13 +45,13 @@ export class ApiService {
     return this.httpClient.get<any>(url).pipe(catchError(this.handleError));
   }
 
-  post(url: string, data: any , headers : HttpHeaders): Observable<any> {
+  post(url: string, data: any, headers: HttpHeaders): Observable<any> {
 
-    return this.httpClient.post<any>(url, data, {headers}).pipe(catchError(this.handleError));
+    return this.httpClient.post<any>(url, data, { headers }).pipe(catchError(this.handleError));
   }
 
-  put(url: string, data: any, headers : HttpHeaders): Observable<any> {
-    return this.httpClient.put<any>(url, data, {headers}).pipe(catchError(this.handleError));
+  put(url: string, data: any, headers: HttpHeaders): Observable<any> {
+    return this.httpClient.put<any>(url, data, { headers }).pipe(catchError(this.handleError));
   }
 
   delete(url: string, parameters: Map<string, any> | null): Observable<any> {
