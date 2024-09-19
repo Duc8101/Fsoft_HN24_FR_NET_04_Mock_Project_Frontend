@@ -12,18 +12,19 @@ import { DataView } from 'primeng/dataview';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { DataService } from '../../services/data.service';
+import { ApiUrls } from '../../services/api/api-url';
 
 
 @Component({
   selector: 'app-search',
   standalone: true,
   imports: [CommonModule,
-		FormsModule,
-		DataViewModule,
-		InputTextModule,
-		DropdownModule,
-		RatingModule,
-		ButtonModule],
+    FormsModule,
+    DataViewModule,
+    InputTextModule,
+    DropdownModule,
+    RatingModule,
+    ButtonModule],
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss',
 })
@@ -48,7 +49,7 @@ export class SearchComponent implements OnInit {
     private readonly apiService: ApiService,
     private readonly routers: Router,
     private readonly dataService: DataService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getData();
@@ -85,12 +86,12 @@ export class SearchComponent implements OnInit {
 
   getData() {
     let parameters: Map<string, any> = new Map();
-    parameters.set("name",this.dataService.getSearchName());
+    parameters.set("name", this.dataService.getSearchName());
     parameters.set("pageSize", 10);
     parameters.set("currentPage", 1);
 
     this.apiService
-      .get('http://localhost:5125/Product/get-all-products', parameters)
+      .get(ApiUrls.URL_GET_ALL_PRODUCTS, parameters)
       .subscribe(
         (response) => {
           const code = response.code;
@@ -106,7 +107,7 @@ export class SearchComponent implements OnInit {
           console.error('Có lỗi xảy ra : ', error);
         }
       );
-      this.dataService.setSearchName("");
+    this.dataService.setSearchName("");
   }
 
   onSortChange(event: any) {
