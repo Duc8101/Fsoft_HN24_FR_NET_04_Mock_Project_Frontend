@@ -16,7 +16,7 @@
                             <div class="flex-1 flex flex-column align-items-center text-center md:text-left">
                                 <div class="font-bold text-2xl">{{product.productName}}</div>
                                 <div class="mb-2">{{product.description}}</div>
-                                <!-- <p-rating [ngModel]="product.rating" [readonly]="true" [cancel]="false" styleClass="mb-2"></p-rating> -->
+                                <p-rating [ngModel]="product.rate" [readonly]="true" [cancel]="false" styleClass="mb-2"></p-rating>
                                 <div class="flex align-items-center mt-2">
                                     <i class="pi pi-tag mr-2"></i>
                                     <span class="font-semibold">{{product.categoryName}}</span>
@@ -24,7 +24,7 @@
                             </div>
                             <div class="flex flex-row md:flex-column justify-content-between w-full md:w-auto align-items-center md:align-items-end mt-5 md:mt-0">
                                 <span class="text-2xl font-semibold mb-2 align-self-center md:align-self-end">${{product.price}}</span>
-                                <!-- <p-button icon="pi pi-shopping-cart" label="Add to Cart" [disabled]="product.inventoryStatus === 'OUTOFSTOCK'" styleClass="mb-2 p-button-sm"></p-button> -->
+                                <p-button icon="pi pi-shopping-cart" label="Add to Cart" [disabled]="product.inventoryStatus === 'OUTOFSTOCK'" styleClass="mb-2 p-button-sm"></p-button>
                                 <!-- <span [class]="'product-badge status-' + product.inventoryStatus.toLowerCase()">{{product.inventoryStatus}}</span> -->
                             </div>
                         </div>
@@ -39,19 +39,21 @@
                             <div class="flex flex-wrap gap-2 align-items-center justify-content-between mb-2">
                                 <div class="flex align-items-center">
                                     <i class="pi pi-tag mr-2"></i>
-                                    <span class="font-semibold">{{product.categoryName}}</span>
+                                    <span class="font-semibold"><a class="text-decoration-none" href="/product-detail/{{product.productId}}">{{product.categoryName}}</a></span>
                                 </div>
                                 <!-- <span [class]="'product-badge status-' + product.inventoryStatus.toLowerCase()">{{product.inventoryStatus}}</span> -->
                             </div>
                             <div class="flex flex-column align-items-center text-center mb-3">
-                                <img [src]="product.image" [alt]="product.name" class="w-9 shadow-2 my-3 mx-0"/>
+                                <a class="text-decoration-none" href="/product-detail/{{product.productId}}">
+                                    <img [src]="product.image" [alt]="product.name" class="w-9 shadow-2 my-3 mx-0"/>
+                                </a>
                                 <div class="text-2xl font-bold">{{product.productName}}</div>
                                 <div class="mb-3">{{product.description}}</div>
-                                <!-- <p-rating [ngModel]="product.rating" [readonly]="true" [cancel]="false"></p-rating> -->
+                                <p-rating [ngModel]="product.rate" [readonly]="true" [cancel]="false"></p-rating>
                             </div>
                             <div class="flex align-items-center justify-content-between">
                                 <span class="text-2xl font-semibold">${{product.price}}</span>
-                                <!-- <p-button icon="pi pi-shopping-cart" [disabled]="product.inventoryStatus === 'OUTOFSTOCK'"></p-button> -->
+                                <p-button icon="pi pi-shopping-cart" [disabled]="product.inventoryStatus === 'OUTOFSTOCK'"></p-button>
                             </div>
                         </div>
                     </div>
