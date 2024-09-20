@@ -9,9 +9,11 @@
             <p-divider></p-divider>
             <h5>Price range</h5>
             <h6>From:</h6>
-            <p-inputNumber [(ngModel)]="minPrice" mode="decimal" [showButtons]="true" [min]="0"  suffix=" $"></p-inputNumber>
+            <p-inputNumber [(ngModel)]="minPrice" mode="decimal" [showButtons]="true" [min]="0"
+                suffix=" $"></p-inputNumber>
             <h6>To:</h6>
-            <p-inputNumber [(ngModel)]="maxPrice" mode="decimal" [showButtons]="true" [min]="0" suffix=" $"></p-inputNumber>
+            <p-inputNumber [(ngModel)]="maxPrice" mode="decimal" [showButtons]="true" [min]="0"
+                suffix=" $"></p-inputNumber>
             <p-divider></p-divider>
             <h5>Search text</h5>
             <input [(ngModel)]="name" type="text" pInputText>
@@ -21,8 +23,7 @@
     </div>
     <div class="col-12 md:col-9">
         <div class="card">
-            <p-dataView #dv [value]="products" [paginator]="true" [rows]="9" filterBy="productName"
-                [sortField]="sortField" [sortOrder]="sortOrder" layout="grid">
+            <p-dataView #dv [value]="products" layout="grid">
                 <ng-template pTemplate="header">
                     <div class="flex justify-content-end gap-1">
                         <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
@@ -48,8 +49,8 @@
                                 class="flex flex-row md:flex-column justify-content-between w-full md:w-auto align-items-center md:align-items-end mt-5 md:mt-0">
                                 <span
                                     class="text-2xl font-semibold mb-2 align-self-center md:align-self-end">${{product.price}}</span>
-                                <p-button [disabled]="product.quantity === 0" icon="pi pi-shopping-cart" label="Add to Cart"
-                                    styleClass="mb-2 p-button-sm"></p-button>
+                                <p-button [disabled]="product.quantity === 0" icon="pi pi-shopping-cart"
+                                    label="Add to Cart" styleClass="mb-2 p-button-sm"></p-button>
                                 <p-tag *ngIf="product.quantity === 0" severity="danger" value="Out of stock"></p-tag>
                             </div>
                         </div>
@@ -65,7 +66,8 @@
                                         <i class="pi pi-tag mr-2"></i>
                                         <span class="font-semibold">{{product.categoryName}}</span>
                                     </div>
-                                    <p-tag *ngIf="product.quantity === 0" severity="danger" value="Out of stock"></p-tag>
+                                    <p-tag *ngIf="product.quantity === 0" severity="danger"
+                                        value="Out of stock"></p-tag>
                                 </div>
                                 <div class="flex flex-column align-items-center text-center mb-3">
                                     <img [src]="product.image" [alt]="product.name" class="w-9 shadow-2 my-3 mx-0" />
@@ -82,6 +84,7 @@
                     </div>
                 </ng-template>
             </p-dataView>
+            <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="9" [totalRecords]="totalItem"/>
         </div>
     </div>
 </div>

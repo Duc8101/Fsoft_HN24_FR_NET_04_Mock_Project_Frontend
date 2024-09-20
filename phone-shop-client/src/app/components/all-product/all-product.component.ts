@@ -17,21 +17,23 @@ import { Category } from '../../models/category';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TagModule } from 'primeng/tag';
+import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 @Component({
   selector: 'app-all-product',
   standalone: true,
   imports: [CommonModule,
-		FormsModule,
-		DataViewModule,
-		InputTextModule,
-		DropdownModule,
-		RatingModule,
-		ButtonModule,
+    FormsModule,
+    DataViewModule,
+    InputTextModule,
+    DropdownModule,
+    RatingModule,
+    ButtonModule,
     DividerModule,
     CheckboxModule,
     MultiSelectModule,
     InputNumberModule,
     TagModule,
+    PaginatorModule
   ],
   templateUrl: './all-product.component.html',
   styleUrl: './all-product.component.scss'
@@ -42,16 +44,19 @@ export class AllProductComponent implements OnInit {
   sortOptions: SelectItem[] = [];
   sortOrder: number = 0;
   sortField: string = '';
-  categories : Category[] = [];
-  selectedCategories : number[] = [];
-  minPrice : number = 0;
-  maxPrice : number = 9999999;
-  name : string = "";
+  categories: Category[] = [];
+  selectedCategories: number[] = [];
+  minPrice: number = 0;
+  maxPrice: number = 9999999;
+  name: string = "";
+  totalItem: number = 0;
+  pageNum: number = 0;
+  first: number = 0;
 
   constructor(
     private readonly apiService: ApiService,
     private readonly routers: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getData();
@@ -64,19 +69,20 @@ export class AllProductComponent implements OnInit {
     //?pageSize=10&currentPage=1
     let parameters: Map<string, any> = new Map();
     parameters.set("pageSize", 9);
-    parameters.set("currentPage", 1);
+    parameters.set("currentPage", this.pageNum + 1);
     parameters.set("priceFrom", this.minPrice);
-    parameters.set("priceTo", this.maxPrice);
+    parameters.set("priceTo", this.maxPrice === 0 ? 99999 : this.maxPrice);
     parameters.set("name", this.name);
 
     this.apiService
-      .post('http://localhost:5125/Product/get-all-products',this.selectedCategories ,parameters)
+      .post('http://localhost:5125/Product/get-all-products', this.selectedCategories, parameters)
       .subscribe(
         (response) => {
           const code = response.code;
           const message = response.message;
           if (code === 200) {
             this.products = response.data.list;
+            this.totalItem = response.data.totalElement;
           } else {
             this.error = message;
           }
@@ -88,7 +94,7 @@ export class AllProductComponent implements OnInit {
       );
   }
 
-  getCategories(){
+  getCategories() {
     this.apiService
       .get('http://localhost:5125/Category/get-all-categories', null)
       .subscribe(
@@ -113,7 +119,16 @@ export class AllProductComponent implements OnInit {
   }
 
   Search() {
-      this.getData();
+    this.pageNum = 0;
+    this.getData();
+  }
+
+  onPageChange(event: PaginatorState) {
+    if (event.page || event.page === 0) {
+      this.pageNum = event.page;
+      this.first = (this.pageNum) * 9;
     }
+    this.getData();
+  }
 }
 
