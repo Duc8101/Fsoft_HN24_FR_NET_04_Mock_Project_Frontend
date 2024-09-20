@@ -31,7 +31,7 @@ import { ApiUrls } from '../../services/api/api-url';
 
 export class SearchComponent implements OnInit {
   error = '';
-  
+
   products: Product[] = [];
 
   sortOptions: SelectItem[] = [];
@@ -50,7 +50,7 @@ export class SearchComponent implements OnInit {
     private readonly apiService: ApiService,
     private readonly routers: Router,
     private readonly dataService: DataService,
-    
+
   ) { }
 
   ngOnInit() {
@@ -93,7 +93,7 @@ export class SearchComponent implements OnInit {
     parameters.set("currentPage", 1);
 
     this.apiService
-      .get(ApiUrls.URL_GET_ALL_PRODUCTS, parameters)
+      .get(ApiUrls.URL_GET_ALL_PRODUCTS, parameters, null)
       .subscribe(
         (response) => {
           const code = response.code;
