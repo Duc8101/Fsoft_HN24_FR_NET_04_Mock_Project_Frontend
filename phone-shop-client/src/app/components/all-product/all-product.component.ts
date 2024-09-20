@@ -43,7 +43,11 @@ export class AllProductComponent implements OnInit {
   sortOrder: number = 0;
   sortField: string = '';
   categories : Category[] = [];
-  selectedCategories : Category[] = [];
+  selectedCategories : number[] = [];
+  minPrice : number = 0;
+  maxPrice : number = 9999999;
+  name : string = "";
+
   constructor(
     private readonly apiService: ApiService,
     private readonly routers: Router
@@ -52,21 +56,21 @@ export class AllProductComponent implements OnInit {
   ngOnInit() {
     this.getData();
     this.getCategories();
-
-    this.sortOptions = [
-      { label: 'Price High to Low', value: '!price' },
-      { label: 'Price Low to High', value: 'price' },
-    ];
+    this.minPrice = 0;
+    this.maxPrice = 0;
   }
 
   getData() {
     //?pageSize=10&currentPage=1
     let parameters: Map<string, any> = new Map();
-    parameters.set("pageSize", 10);
+    parameters.set("pageSize", 9);
     parameters.set("currentPage", 1);
+    parameters.set("priceFrom", this.minPrice);
+    parameters.set("priceTo", this.maxPrice);
+    parameters.set("name", this.name);
 
     this.apiService
-      .get('http://localhost:5125/Product/get-all-products', parameters)
+      .post('http://localhost:5125/Product/get-all-products',this.selectedCategories ,parameters)
       .subscribe(
         (response) => {
           const code = response.code;
@@ -104,20 +108,12 @@ export class AllProductComponent implements OnInit {
       );
   }
 
-  onSortChange(event: any) {
-    const value = event.value;
-
-    if (value.indexOf('!') === 0) {
-      this.sortOrder = -1;
-      this.sortField = value.substring(1, value.length);
-    } else {
-      this.sortOrder = 1;
-      this.sortField = value;
-    }
-  }
-
   onFilter(dv: DataView, event: Event) {
     dv.filter((event.target as HTMLInputElement).value);
   }
+
+  Search() {
+      this.getData();
+    }
 }
 

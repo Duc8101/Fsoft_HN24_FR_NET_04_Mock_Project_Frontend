@@ -9,14 +9,14 @@
             <p-divider></p-divider>
             <h5>Price range</h5>
             <h6>From:</h6>
-            <p-inputNumber mode="decimal" [showButtons]="true" [min]="0"  suffix=" $"></p-inputNumber>
+            <p-inputNumber [(ngModel)]="minPrice" mode="decimal" [showButtons]="true" [min]="0"  suffix=" $"></p-inputNumber>
             <h6>To:</h6>
-            <p-inputNumber mode="decimal" [showButtons]="true" [min]="0" suffix=" $"></p-inputNumber>
+            <p-inputNumber [(ngModel)]="maxPrice" mode="decimal" [showButtons]="true" [min]="0" suffix=" $"></p-inputNumber>
             <p-divider></p-divider>
             <h5>Search text</h5>
-            <input type="text" pInputText>
+            <input [(ngModel)]="name" type="text" pInputText>
             <p-divider></p-divider>
-            <p-button>Search</p-button>
+            <p-button (onClick)="Search()">Search</p-button>
         </div>
     </div>
     <div class="col-12 md:col-9">
