@@ -16,7 +16,7 @@ export class ProductDetailComponent implements OnInit {
   productId!: number;
   product: Product = {
     productId: 0,
-    categoryName: "string",
+    categoryName: "",
     productName: "",
     image: "",
     price: 0,
