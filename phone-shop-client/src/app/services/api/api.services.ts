@@ -1,6 +1,8 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError, Observable, throwError } from "rxjs";
+import { Media } from "./media";
+import { AppConfig } from "../../app.config";
 
 @Injectable({
   providedIn: 'root'
@@ -8,8 +10,12 @@ import { catchError, Observable, throwError } from "rxjs";
 
 export class ApiService {
 
+  readonly headers: HttpHeaders;
   constructor(private readonly httpClient: HttpClient) {
-
+    this.headers = new HttpHeaders({
+      'Content-Type': Media.CONTENT_TYPE,
+      'Authorization': `Bearer ${AppConfig.token}`
+    });
   }
 
   private handleError(error: HttpErrorResponse) {
@@ -26,7 +32,7 @@ export class ApiService {
     return throwError('Có lỗi xảy ra; vui lòng thử lại sau.');
   }
 
-  get(url: string, parameters: Map<string, any> | null, headers: HttpHeaders | null): Observable<any> {
+  get(url: string, parameters: Map<string, any> | null): Observable<any> {
     let param: string[] = [];
 
     if (parameters != null && parameters.size > 0) {
@@ -43,13 +49,11 @@ export class ApiService {
       url = url + param.join('');
     }
 
-    if (headers === null) {
-      return this.httpClient.get<any>(url).pipe(catchError(this.handleError));
-    }
+    const headers = this.headers;
     return this.httpClient.get<any>(url, { headers }).pipe(catchError(this.handleError));
   }
 
-  post(url: string, body: any, parameters: Map<string, any> | null, headers: HttpHeaders): Observable<any> {
+  post(url: string, body: any, parameters: Map<string, any> | null): Observable<any> {
 
     let param: string[] = [];
 
@@ -67,10 +71,12 @@ export class ApiService {
       url = url + param.join('');
     }
 
+    const headers = this.headers;
     return this.httpClient.post<any>(url, body, { headers }).pipe(catchError(this.handleError));
   }
 
-  put(url: string, data: any, headers: HttpHeaders): Observable<any> {
+  put(url: string, data: any): Observable<any> {
+    const headers = this.headers;
     return this.httpClient.put<any>(url, data, { headers }).pipe(catchError(this.handleError));
   }
 
@@ -90,7 +96,9 @@ export class ApiService {
       }
       url = url + param.join('');
     }
-    return this.httpClient.delete<any>(url).pipe(catchError(this.handleError));
+
+    const headers = this.headers;
+    return this.httpClient.delete<any>(url, { headers }).pipe(catchError(this.handleError));
   }
 
 }

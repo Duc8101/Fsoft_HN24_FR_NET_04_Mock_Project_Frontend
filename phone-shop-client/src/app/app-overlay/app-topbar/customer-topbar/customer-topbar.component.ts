@@ -11,6 +11,7 @@ import { DataService } from '../../../services/data.service';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../../services/api/api.services';
 import { ApiUrls } from '../../../services/api/api-url';
+import { AppConfig } from '../../../app.config';
 
 @Component({
   selector: 'app-customer-topbar',
@@ -38,7 +39,7 @@ export class CustomerTopbarComponent {
     } else {
       const parameters: Map<string, any> = new Map();
       parameters.set('token', token);
-      this.apiService.get(ApiUrls.URL_GET_USER_BY_TOKEN, parameters, null).subscribe(
+      this.apiService.get(ApiUrls.URL_GET_USER_BY_TOKEN, parameters).subscribe(
         (response) => {
           const code = response.code;
           if (code === 200) {
@@ -46,6 +47,7 @@ export class CustomerTopbarComponent {
             sessionStorage.setItem('roleId', response.data.roleId);
             sessionStorage.setItem('username', response.data.username);
             sessionStorage.setItem('roleName', response.data.roleName);
+            AppConfig.token = token;
             this.router.navigate(['/']);
           } else {
             alert(`${response.message}`);

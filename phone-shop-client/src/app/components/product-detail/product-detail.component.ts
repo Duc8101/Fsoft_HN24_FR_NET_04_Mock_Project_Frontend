@@ -36,7 +36,7 @@ export class ProductDetailComponent implements OnInit {
 
   getData() {
     this.apiService
-      .get(ApiUrls.URL_GET_PRODUCT_DETAIL + "/" + this.productId, null, null)
+      .get(ApiUrls.URL_GET_PRODUCT_DETAIL + "/" + this.productId, null)
       .subscribe(
         (response) => {
           const code = response.code;

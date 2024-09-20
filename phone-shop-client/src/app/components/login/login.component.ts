@@ -10,6 +10,7 @@ import { Login } from '../../models/login';
 import { Media } from '../../services/api/media';
 import { ApiUrls } from '../../services/api/api-url';
 import { DataService } from '../../services/data.service';
+import { AppConfig } from '../../app.config';
 
 @Component({
   selector: 'app-login',
@@ -57,11 +58,7 @@ export class LoginComponent implements OnInit {
 
     const body = JSON.stringify(login);
 
-    const headers = new HttpHeaders({
-      'Content-Type': Media.CONTENT_TYPE,
-      'Authorization': ''
-    });
-    this.apiService.post(ApiUrls.URL_LOGIN, body, null, headers).subscribe(
+    this.apiService.post(ApiUrls.URL_LOGIN, body, null).subscribe(
       response => {
         const code = response.code;
         const message = response.message;
@@ -71,6 +68,7 @@ export class LoginComponent implements OnInit {
           const userId = response.data.userId;
           const roleId = response.data.roleId;
           const roleName = response.data.roleName;
+          AppConfig.token = token;
           localStorage.setItem('token', token);
           sessionStorage.setItem('username', username);
           sessionStorage.setItem('userId', userId);

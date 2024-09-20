@@ -83,7 +83,7 @@ export class AllProductComponent implements OnInit {
     parameters.set("currentPage", 1);
 
     this.apiService
-      .get('http://localhost:5125/Product/get-all-products', parameters, null)
+      .get('http://localhost:5125/Product/get-all-products', parameters)
       .subscribe(
         (response) => {
           const code = response.code;
