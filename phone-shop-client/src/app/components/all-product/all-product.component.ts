@@ -18,6 +18,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TagModule } from 'primeng/tag';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
+import { DialogModule } from 'primeng/dialog';
+
 @Component({
   selector: 'app-all-product',
   standalone: true,
@@ -33,7 +35,8 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
     MultiSelectModule,
     InputNumberModule,
     TagModule,
-    PaginatorModule
+    PaginatorModule,
+    DialogModule
   ],
   templateUrl: './all-product.component.html',
   styleUrl: './all-product.component.scss'
@@ -46,8 +49,8 @@ export class AllProductComponent implements OnInit {
   sortField: string = '';
   categories: Category[] = [];
   selectedCategories: number[] = [];
-  minPrice: number = 0;
-  maxPrice: number = 9999999;
+  minPrice?: number;
+  maxPrice?: number;
   name: string = "";
   totalItem: number = 0;
   pageNum: number = 0;
@@ -66,12 +69,11 @@ export class AllProductComponent implements OnInit {
   }
 
   getData() {
-    //?pageSize=10&currentPage=1
     let parameters: Map<string, any> = new Map();
     parameters.set("pageSize", 9);
     parameters.set("currentPage", this.pageNum + 1);
-    parameters.set("priceFrom", this.minPrice);
-    parameters.set("priceTo", this.maxPrice === 0 ? 99999 : this.maxPrice);
+    parameters.set("priceFrom", this.minPrice ?? "");
+    parameters.set("priceTo", this.maxPrice ?? "");
     parameters.set("name", this.name);
 
     this.apiService
@@ -130,5 +132,11 @@ export class AllProductComponent implements OnInit {
     }
     this.getData();
   }
+
+  visible: boolean = false;
+
+    showDialog() {
+        this.visible = true;
+    }
 }
 
