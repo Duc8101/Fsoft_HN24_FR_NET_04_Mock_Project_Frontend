@@ -7,7 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { Product } from '../../models/product';
 import { SelectItem } from 'primeng/api';
 import { ApiService } from '../../services/api/api.services';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataView } from 'primeng/dataview';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
@@ -31,6 +31,7 @@ import { ApiUrls } from '../../services/api/api-url';
 
 export class SearchComponent implements OnInit {
   error = '';
+
   products: Product[] = [];
 
   sortOptions: SelectItem[] = [];
@@ -48,7 +49,8 @@ export class SearchComponent implements OnInit {
   constructor(
     private readonly apiService: ApiService,
     private readonly routers: Router,
-    private readonly dataService: DataService
+    private readonly dataService: DataService,
+
   ) { }
 
   ngOnInit() {
