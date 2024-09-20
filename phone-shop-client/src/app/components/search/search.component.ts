@@ -93,7 +93,7 @@ export class SearchComponent implements OnInit {
     parameters.set("currentPage", 1);
 
     this.apiService
-      .get(ApiUrls.URL_GET_ALL_PRODUCTS, parameters, null)
+      .get(ApiUrls.URL_GET_ALL_PRODUCTS, parameters)
       .subscribe(
         (response) => {
           const code = response.code;
