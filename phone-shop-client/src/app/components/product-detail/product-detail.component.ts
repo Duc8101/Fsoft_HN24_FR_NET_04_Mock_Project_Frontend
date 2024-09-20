@@ -24,8 +24,8 @@ export class ProductDetailComponent implements OnInit {
     quantity: 0,
     description: ""
   };
-  constructor(private route: ActivatedRoute,private apiService: ApiService) {
-    
+  constructor(private route: ActivatedRoute, private apiService: ApiService) {
+
   }
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -36,7 +36,7 @@ export class ProductDetailComponent implements OnInit {
 
   getData() {
     this.apiService
-      .get(ApiUrls.URL_GET_PRODUCT_DETAIL+"/"+this.productId,null)
+      .get(ApiUrls.URL_GET_PRODUCT_DETAIL + "/" + this.productId, null, null)
       .subscribe(
         (response) => {
           const code = response.code;
