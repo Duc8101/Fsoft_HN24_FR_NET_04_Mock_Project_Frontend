@@ -10,6 +10,7 @@ import { Login } from '../../models/login';
 import { Media } from '../../services/api/media';
 import { ApiUrls } from '../../services/api/api-url';
 import { DataService } from '../../services/data.service';
+import { AppConfig } from '../../app.config';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +24,7 @@ export class LoginComponent implements OnInit {
   formLogin: FormGroup;
   test: number = 0;
 
-  constructor(private readonly formBuilder: FormBuilder, private readonly apiService: ApiService, 
+  constructor(private readonly formBuilder: FormBuilder, private readonly apiService: ApiService,
     private readonly router: Router, private readonly dataService: DataService) {
     this.formLogin = this.formBuilder.group({
       username: this.formBuilder.control('', [Validators.required, this.noWhitespaceValidator()]),
@@ -55,13 +56,9 @@ export class LoginComponent implements OnInit {
       password: password
     };
 
-    const data = JSON.stringify(login);
+    const body = JSON.stringify(login);
 
-    const headers = new HttpHeaders({
-      'Content-Type': Media.CONTENT_TYPE,
-      'Authorization': ''
-    });
-    this.apiService.post(ApiUrls.URL_LOGIN, data, headers).subscribe(
+    this.apiService.post(ApiUrls.URL_LOGIN, body, null).subscribe(
       response => {
         const code = response.code;
         const message = response.message;
@@ -71,7 +68,8 @@ export class LoginComponent implements OnInit {
           const userId = response.data.userId;
           const roleId = response.data.roleId;
           const roleName = response.data.roleName;
-          sessionStorage.setItem('token', token);
+          AppConfig.token = token;
+          localStorage.setItem('token', token);
           sessionStorage.setItem('username', username);
           sessionStorage.setItem('userId', userId);
           sessionStorage.setItem('roleId', roleId);
@@ -92,8 +90,8 @@ export class LoginComponent implements OnInit {
     this.test = this.dataService.getCartLength();
   }
 
-  plusNumber(){
-    this.test +=1;
+  plusNumber() {
+    this.test += 1;
     this.dataService.setCartLength(this.test);
     console.log(this.test)
   }
