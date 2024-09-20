@@ -13,6 +13,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { DataService } from '../../services/data.service';
 import { ApiUrls } from '../../services/api/api-url';
+import { TagModule } from 'primeng/tag';
 
 
 @Component({
@@ -24,7 +25,9 @@ import { ApiUrls } from '../../services/api/api-url';
     InputTextModule,
     DropdownModule,
     RatingModule,
-    ButtonModule],
+    ButtonModule,
+    TagModule
+  ],
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss',
 })

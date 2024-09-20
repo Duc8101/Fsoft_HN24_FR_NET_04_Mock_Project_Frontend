@@ -11,85 +11,80 @@ import { DataViewModule } from 'primeng/dataview';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DataView } from 'primeng/dataview';
+import { DividerModule } from 'primeng/divider';
+import { CheckboxModule } from 'primeng/checkbox';
+import { Category } from '../../models/category';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { TagModule } from 'primeng/tag';
+import { PaginatorModule, PaginatorState } from 'primeng/paginator';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-all-product',
   standalone: true,
   imports: [CommonModule,
-		FormsModule,
-		DataViewModule,
-		InputTextModule,
-		DropdownModule,
-		RatingModule,
-		ButtonModule],
+    FormsModule,
+    DataViewModule,
+    InputTextModule,
+    DropdownModule,
+    RatingModule,
+    ButtonModule,
+    DividerModule,
+    CheckboxModule,
+    MultiSelectModule,
+    InputNumberModule,
+    TagModule,
+    PaginatorModule,
+    DialogModule
+  ],
   templateUrl: './all-product.component.html',
   styleUrl: './all-product.component.scss'
 })
 export class AllProductComponent implements OnInit {
   error = '';
   products: Product[] = [];
-
   sortOptions: SelectItem[] = [];
-
   sortOrder: number = 0;
-
   sortField: string = '';
-
-  sourceCities: any[] = [];
-
-  targetCities: any[] = [];
-
-  orderCities: any[] = [];
+  categories: Category[] = [];
+  selectedCategories: number[] = [];
+  minPrice?: number;
+  maxPrice?: number;
+  name: string = "";
+  totalItem: number = 0;
+  pageNum: number = 0;
+  first: number = 0;
 
   constructor(
     private readonly apiService: ApiService,
     private readonly routers: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getData();
-    this.sourceCities = [
-      { name: 'San Francisco', code: 'SF' },
-      { name: 'London', code: 'LDN' },
-      { name: 'Paris', code: 'PRS' },
-      { name: 'Istanbul', code: 'IST' },
-      { name: 'Berlin', code: 'BRL' },
-      { name: 'Barcelona', code: 'BRC' },
-      { name: 'Rome', code: 'RM' },
-    ];
-
-    this.targetCities = [];
-
-    this.orderCities = [
-      { name: 'San Francisco', code: 'SF' },
-      { name: 'London', code: 'LDN' },
-      { name: 'Paris', code: 'PRS' },
-      { name: 'Istanbul', code: 'IST' },
-      { name: 'Berlin', code: 'BRL' },
-      { name: 'Barcelona', code: 'BRC' },
-      { name: 'Rome', code: 'RM' },
-    ];
-
-    this.sortOptions = [
-      { label: 'Price High to Low', value: '!price' },
-      { label: 'Price Low to High', value: 'price' },
-    ];
+    this.getCategories();
+    this.minPrice = 0;
+    this.maxPrice = 0;
   }
 
   getData() {
-    //?pageSize=10&currentPage=1
     let parameters: Map<string, any> = new Map();
-    parameters.set("pageSize", 10);
-    parameters.set("currentPage", 1);
+    parameters.set("pageSize", 9);
+    parameters.set("currentPage", this.pageNum + 1);
+    parameters.set("priceFrom", this.minPrice ?? "");
+    parameters.set("priceTo", this.maxPrice ?? "");
+    parameters.set("name", this.name);
 
     this.apiService
-      .get('http://localhost:5125/Product/get-all-products', parameters)
+      .post('http://localhost:5125/Product/get-all-products', this.selectedCategories, parameters)
       .subscribe(
         (response) => {
           const code = response.code;
           const message = response.message;
           if (code === 200) {
             this.products = response.data.list;
+            this.totalItem = response.data.totalElement;
           } else {
             this.error = message;
           }
@@ -101,20 +96,47 @@ export class AllProductComponent implements OnInit {
       );
   }
 
-  onSortChange(event: any) {
-    const value = event.value;
+  getCategories() {
+    this.apiService
+      .get('http://localhost:5125/Category/get-all-categories', null)
+      .subscribe(
+        (response) => {
+          const code = response.code;
+          const message = response.message;
+          if (code === 200) {
+            this.categories = response.data;
+          } else {
+            this.error = message;
+          }
+        },
 
-    if (value.indexOf('!') === 0) {
-      this.sortOrder = -1;
-      this.sortField = value.substring(1, value.length);
-    } else {
-      this.sortOrder = 1;
-      this.sortField = value;
-    }
+        (error) => {
+          console.error('Có lỗi xảy ra : ', error);
+        }
+      );
   }
 
   onFilter(dv: DataView, event: Event) {
     dv.filter((event.target as HTMLInputElement).value);
   }
+
+  Search() {
+    this.pageNum = 0;
+    this.getData();
+  }
+
+  onPageChange(event: PaginatorState) {
+    if (event.page || event.page === 0) {
+      this.pageNum = event.page;
+      this.first = (this.pageNum) * 9;
+    }
+    this.getData();
+  }
+
+  visible: boolean = false;
+
+    showDialog() {
+        this.visible = true;
+    }
 }
 
