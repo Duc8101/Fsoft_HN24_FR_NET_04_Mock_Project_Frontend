@@ -61,7 +61,8 @@ export class ManageProductComponent implements OnInit {
     price: 0,
     categoryId: 0,
     quantity: 0,
-    description: ""
+    description: "",
+    rate: 0
   };
 
   selectedProducts: Product[] = [];
@@ -117,7 +118,8 @@ export class ManageProductComponent implements OnInit {
         price: 0,
         categoryId: 0,
         quantity: 0,
-        description: ""
+        description: "",
+        rate : 0
       };
   }
 
@@ -148,6 +150,7 @@ export class ManageProductComponent implements OnInit {
             image: "",
             price: 0,
             categoryId: 0,
+            rate: 0,
             quantity: 0,
             description: ""};
       }
@@ -159,7 +162,7 @@ export class ManageProductComponent implements OnInit {
     parameters.set("currentPage", 1);
 
     this.apiService
-      .get('http://localhost:5125/Product/get-all-products', parameters)
+      .post('http://localhost:5125/Product/get-all-products',[], parameters)
       .subscribe(
         (response) => {
           const code = response.code;
@@ -179,5 +182,13 @@ export class ManageProductComponent implements OnInit {
 
   onGlobalFilter(table: Table, event: Event) {
       table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+  }
+
+  chooseProduct(id: number){
+    let findProduct = this.products.find(p => p.productId == id)
+    if(findProduct){
+        this.product = findProduct;
+    }
+    
   }
 }

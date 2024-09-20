@@ -22,7 +22,8 @@ export class ProductDetailComponent implements OnInit {
     price: 0,
     categoryId: 0,
     quantity: 0,
-    description: ""
+    description: "",
+    rate: 0
   };
   constructor(private route: ActivatedRoute, private apiService: ApiService) {
 
