@@ -10,7 +10,6 @@ import { Login } from '../../models/login';
 import { Media } from '../../services/api/media';
 import { ApiUrls } from '../../services/api/api-url';
 import { DataService } from '../../services/data.service';
-import { AppConfig } from '../../app.config';
 
 @Component({
   selector: 'app-login',
@@ -68,9 +67,6 @@ export class LoginComponent implements OnInit {
           const userId = response.data.userId;
           const roleId = response.data.roleId;
           const roleName = response.data.roleName;
-          AppConfig.token = token;
-          console.log(AppConfig.token)
-          localStorage.setItem('token', token);
           sessionStorage.setItem('username', username);
           sessionStorage.setItem('userId', userId);
           sessionStorage.setItem('roleId', roleId);

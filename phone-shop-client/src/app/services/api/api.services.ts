@@ -2,7 +2,6 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http
 import { Injectable } from "@angular/core";
 import { catchError, Observable, throwError } from "rxjs";
 import { Media } from "./media";
-import { AppConfig } from "../../app.config";
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +13,12 @@ export class ApiService {
   constructor(private readonly httpClient: HttpClient) {
     this.headers = new HttpHeaders({
       'Content-Type': Media.CONTENT_TYPE,
-      'Authorization': `Bearer ${AppConfig.token}`
+      'Authorization': `Bearer ${this.token}`
     });
+  }
+
+  private get token() : string{
+     return sessionStorage.getItem('token') ?? '';
   }
 
   private handleError(error: HttpErrorResponse) {
