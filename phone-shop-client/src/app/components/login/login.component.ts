@@ -1,16 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { HttpHeaders } from '@angular/common/http';
 import { CheckboxModule } from 'primeng/checkbox';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { ApiService } from '../../services/api/api.services';
 import { Login } from '../../models/login';
-import { Media } from '../../services/api/media';
 import { ApiUrls } from '../../services/api/api-url';
 import { DataService } from '../../services/data.service';
-import { AppConfig } from '../../app.config';
 
 @Component({
   selector: 'app-login',
@@ -68,8 +65,8 @@ export class LoginComponent implements OnInit {
           const userId = response.data.userId;
           const roleId = response.data.roleId;
           const roleName = response.data.roleName;
-          AppConfig.token = token;
           localStorage.setItem('token', token);
+          sessionStorage.setItem('token', token);
           sessionStorage.setItem('username', username);
           sessionStorage.setItem('userId', userId);
           sessionStorage.setItem('roleId', roleId);

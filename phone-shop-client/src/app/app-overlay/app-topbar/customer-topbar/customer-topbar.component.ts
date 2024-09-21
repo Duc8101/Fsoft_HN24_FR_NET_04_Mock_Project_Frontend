@@ -11,8 +11,6 @@ import { DataService } from '../../../services/data.service';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../../services/api/api.services';
 import { ApiUrls } from '../../../services/api/api-url';
-import { AppConfig } from '../../../app.config';
-
 @Component({
   selector: 'app-customer-topbar',
   standalone: true,
@@ -43,11 +41,11 @@ export class CustomerTopbarComponent {
         (response) => {
           const code = response.code;
           if (code === 200) {
+            sessionStorage.setItem('token', token);
             sessionStorage.setItem('userId', response.data.userId);
             sessionStorage.setItem('roleId', response.data.roleId);
             sessionStorage.setItem('username', response.data.username);
             sessionStorage.setItem('roleName', response.data.roleName);
-            AppConfig.token = token;
             this.router.navigate(['/']);
           } else {
             alert(`${response.message}`);
