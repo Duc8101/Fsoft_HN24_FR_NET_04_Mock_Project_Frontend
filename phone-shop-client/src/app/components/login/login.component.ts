@@ -69,6 +69,7 @@ export class LoginComponent implements OnInit {
           const roleId = response.data.roleId;
           const roleName = response.data.roleName;
           AppConfig.token = token;
+          console.log(AppConfig.token)
           localStorage.setItem('token', token);
           sessionStorage.setItem('username', username);
           sessionStorage.setItem('userId', userId);

@@ -17,6 +17,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
 import { Product } from '../../../models/product';
 import { ApiService } from '../../../services/api/api.services';
+import { ApiUrls } from '../../../services/api/api-url';
+import { Category } from '../../../models/category';
 
 
 @Component({
@@ -45,6 +47,8 @@ import { ApiService } from '../../../services/api/api.services';
 export class ManageProductComponent implements OnInit {
   error = '';
 
+  statusButton = 'Add';
+
   productDialog: boolean = false;
 
   deleteProductDialog: boolean = false;
@@ -52,6 +56,8 @@ export class ManageProductComponent implements OnInit {
   deleteProductsDialog: boolean = false;
 
   products: Product[] = [];
+
+  categories: Category[] = [];
 
   product: Product = {
     productId: 0,
@@ -78,11 +84,22 @@ export class ManageProductComponent implements OnInit {
   constructor(private readonly apiService: ApiService) { }
 
   ngOnInit() {
-    this.getData();
+    this.getListProduct();
+    this.getListCategory();
   }
 
   openNew() {
-  //    this.product = {};
+      this.product = {
+        productId: 0,
+        categoryName: "",
+        productName: "",
+        image: "",
+        price: 0,
+        categoryId: 0,
+        quantity: 0,
+        description: "",
+        rate: 0
+      };
       this.submitted = false;
       this.productDialog = true;
   }
@@ -128,41 +145,48 @@ export class ManageProductComponent implements OnInit {
       this.submitted = false;
   }
 
-  saveProduct() {
-      this.submitted = true;
+  // saveProduct() {
+  //     this.submitted = true;
 
-      if (this.product.productName?.trim()) {
-          if (this.product.productId) {
-              // @ts-ignore
-              this.product.inventoryStatus = this.product.inventoryStatus.value ? this.product.inventoryStatus.value : this.product.inventoryStatus;
-            //   this.products[this.findIndexById(this.product.productId)] = this.product;
-          } else {
-              this.product.image = 'product-placeholder.svg';
-              // @ts-ignore
-              this.products.push(this.product);
-          }
+  //     if (this.product.productName?.trim()) {
+  //       this.apiService
+  //       .post(ApiUrls.URL_CREATE_PRODUCT,[this.])
+  //       .subscribe(
+  //         (response) => {
+  //           const code = response.code;
+  //           const message = response.message;
+  //           if (code === 200) {
+  //             this.products = response.data.list;
+  //           } else {
+  //             this.error = message;
+  //           }
+  //         },
+  //         (error) => {
+  //           console.error('Có lỗi xảy ra : ', error);
+  //         }
+  //       );
 
-          this.products = [...this.products];
-          this.productDialog = false;
-          this.product = {productId: 0,
-            categoryName: "",
-            productName: "",
-            image: "",
-            price: 0,
-            categoryId: 0,
-            rate: 0,
-            quantity: 0,
-            description: ""};
-      }
-  }
+  //         this.products = [...this.products];
+  //         this.productDialog = false;
+  //         this.product = {productId: 0,
+  //           categoryName: "",
+  //           productName: "",
+  //           image: "",
+  //           price: 0,
+  //           categoryId: 0,
+  //           rate: 0,
+  //           quantity: 0,
+  //           description: ""};
+  //     }
+  // }
 
-  getData(){
+  getListProduct(){
     let parameters: Map<string, any> = new Map();
     parameters.set("pageSize", 10);
     parameters.set("currentPage", 1);
 
     this.apiService
-      .post('http://localhost:5125/Product/get-all-products',[], parameters)
+      .post(ApiUrls.URL_GET_ALL_PRODUCTS,[], parameters)
       .subscribe(
         (response) => {
           const code = response.code;
@@ -178,6 +202,58 @@ export class ManageProductComponent implements OnInit {
         }
       );
   };
+  
+  getListCategory(){
+    this.apiService
+      .get(ApiUrls.URL_GET_ALL_CATEGORIES,null)
+      .subscribe(
+        (response) => {
+          const code = response.code;
+          const message = response.message;
+          if (code === 200) {
+            this.categories = response.data;
+            console.log(this.categories)
+          } else {
+            this.error = message;
+          }
+        },
+        (error) => {
+          console.error('Có lỗi xảy ra : ', error);
+        }
+      );
+  };
+
+  createProduct(){
+    this.submitted = true;
+
+    this.apiService
+      .post(ApiUrls.URL_CREATE_PRODUCT,[],null)
+      .subscribe(
+        (response) => {
+          const code = response.code;
+          const message = response.message;
+          if (code === 200) {
+            this.getListProduct();
+          } else {
+            this.error = message;
+          }
+        },
+        (error) => {
+          console.error('Có lỗi xảy ra : ', error);
+        }
+      );
+      this.products = [...this.products];
+          this.productDialog = false;
+          this.product = {productId: 0,
+            categoryName: "",
+            productName: "",
+            image: "",
+            price: 0,
+            categoryId: 0,
+            rate: 0,
+            quantity: 0,
+            description: ""};
+  }
 
 
   onGlobalFilter(table: Table, event: Event) {
@@ -189,6 +265,6 @@ export class ManageProductComponent implements OnInit {
     if(findProduct){
         this.product = findProduct;
     }
-    
+    this.statusButton = "Update";
   }
 }
