@@ -59,6 +59,8 @@ export class ManageProductComponent implements OnInit {
 
   categories: Category[] = [];
 
+  isUpdate: boolean = false;
+
   product: Product = {
     productId: 0,
     categoryName: "",
@@ -108,20 +110,18 @@ export class ManageProductComponent implements OnInit {
       this.deleteProductsDialog = true;
   }
 
-  editProduct(product: Product) {
-      this.product = { ...product };
+  openUpdateProduct(product: Product) {
       this.productDialog = true;
+      this.isUpdate = true; 
   }
 
-  deleteProduct(product: Product) {
-      this.deleteProductDialog = true;
-      this.product = { ...product };
+  openDeleteProduct(){
+    this.deleteProductDialog = true;
   }
+
 
   confirmDeleteSelected() {
       this.deleteProductsDialog = false;
-      this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-      this.selectedProducts = [];
   }
 
   confirmDelete() {
@@ -225,9 +225,8 @@ export class ManageProductComponent implements OnInit {
 
   createProduct(){
     this.submitted = true;
-
     this.apiService
-      .post(ApiUrls.URL_CREATE_PRODUCT,[],null)
+      .post(ApiUrls.URL_CREATE_PRODUCT,this.product,null)
       .subscribe(
         (response) => {
           const code = response.code;
@@ -253,6 +252,62 @@ export class ManageProductComponent implements OnInit {
             rate: 0,
             quantity: 0,
             description: ""};
+  }
+
+  updateProduct(){
+    this.submitted = true;
+    console.log(this.product)
+    this.apiService
+      .put(ApiUrls.URL_UPDATE_PRODUCT+"/"+this.product.productId,this.product)
+      .subscribe(
+        (response) => {
+          const code = response.code;
+          const message = response.message;
+          if (code === 200) {
+            this.getListProduct();
+          } else {
+            this.error = message;
+          }
+        },
+        (error) => {
+          console.error('Có lỗi xảy ra : ', error);
+        }
+      );
+      this.products = [...this.products];
+          this.productDialog = false;
+          this.product = {productId: 0,
+            categoryName: "",
+            productName: "",
+            image: "",
+            price: 0,
+            categoryId: 0,
+            rate: 0,
+            quantity: 0,
+            description: ""};
+    this.isUpdate = false;
+  };
+
+  deleteProduct(id: number){
+    let parameters: Map<string, any> = new Map();
+    parameters.set("productId", id);
+    console.log(id)
+
+    this.apiService
+      .delete(ApiUrls.URL_DELETE_PRODUCT+"/"+id,null)
+      .subscribe(
+        (response) => {
+          const code = response.code;
+          const message = response.message;
+          if (code === 200) {
+            this.getListProduct();
+          } else {
+            this.error = message;
+          }
+        },
+        (error) => {
+          console.error('Có lỗi xảy ra : ', error);
+        }
+      );
   }
 
 

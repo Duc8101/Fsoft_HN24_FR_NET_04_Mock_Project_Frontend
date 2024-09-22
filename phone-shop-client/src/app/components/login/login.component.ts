@@ -70,7 +70,8 @@ export class LoginComponent implements OnInit {
           sessionStorage.setItem('username', username);
           sessionStorage.setItem('userId', userId);
           sessionStorage.setItem('roleId', roleId);
-          sessionStorage.setItem('roleName', roleName)
+          sessionStorage.setItem('roleName', roleName);
+          sessionStorage.setItem('token',token);
           this.router.navigate(['']);
         } else {
           this.error = message;

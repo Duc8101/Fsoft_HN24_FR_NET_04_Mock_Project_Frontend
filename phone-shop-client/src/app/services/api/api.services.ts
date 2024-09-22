@@ -57,7 +57,6 @@ export class ApiService {
   }
 
   post(url: string, body: any, parameters: Map<string, any> | null): Observable<any> {
-    console.log(AppConfig.token)
     let param: string[] = [];
 
     if (parameters != null && parameters.size > 0) {
@@ -85,7 +84,7 @@ export class ApiService {
 
   delete(url: string, parameters: Map<string, any> | null): Observable<any> {
     let param: string[] = [];
-
+    console.log(this.headers)
     if (parameters != null && parameters.size > 0) {
       param.push("?");
       let keys = Array.from(parameters.keys());
