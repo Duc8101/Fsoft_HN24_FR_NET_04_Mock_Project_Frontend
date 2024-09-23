@@ -6,6 +6,9 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { SearchComponent } from './components/search/search.component';
 import { AllProductComponent } from './components/all-product/all-product.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
+import { CartComponent } from './components/customer/cart/cart.component';
+import { CheckoutComponent } from './components/customer/checkout/checkout.component';
+import { CustomerOrdersManagementComponent } from './components/customer/customer-orders-management/customer-orders-management.component';
 
 export const routes : Routes = [
   {path : 'login', component : LoginComponent},
@@ -14,4 +17,7 @@ export const routes : Routes = [
   {path : 'search', component : SearchComponent},
   {path : 'all-product', component : AllProductComponent},
   {path : 'product-detail/:id', component : ProductDetailComponent},
+  {path : 'cart', component : CartComponent},
+  {path : 'checkout', component : CheckoutComponent},
+  {path : 'customer-orders-management', component : CustomerOrdersManagementComponent}, 
 ];
