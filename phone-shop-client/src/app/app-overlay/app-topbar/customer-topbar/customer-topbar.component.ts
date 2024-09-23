@@ -41,14 +41,20 @@ export class CustomerTopbarComponent {
         (response) => {
           const code = response.code;
           if (code === 200) {
+            console.log(`token : ${token}`);
             sessionStorage.setItem('token', token);
             sessionStorage.setItem('userId', response.data.userId);
             sessionStorage.setItem('roleId', response.data.roleId);
             sessionStorage.setItem('username', response.data.username);
             sessionStorage.setItem('roleName', response.data.roleName);
-            this.router.navigate(['/']);
+            if (response.data.roleId == 1) {
+              this.router.navigate(['/admin-page']);
+            } else {
+              this.router.navigate(['']);
+            }
           } else {
             alert(`${response.message}`);
+            localStorage.clear();
             this.router.navigate(['/login']);
           }
         },
