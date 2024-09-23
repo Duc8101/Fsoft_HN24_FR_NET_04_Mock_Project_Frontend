@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StyleClassModule } from 'primeng/styleclass';
@@ -11,18 +11,43 @@ import { DataService } from '../../../services/data.service';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../../services/api/api.services';
 import { ApiUrls } from '../../../services/api/api-url';
+import { MenuModule } from 'primeng/menu';
+import { MenuItem } from 'primeng/api';
+
 @Component({
   selector: 'app-customer-topbar',
   standalone: true,
-  imports: [CommonModule, StyleClassModule, DividerModule, ChartModule, ButtonModule, PanelModule, FormsModule],
+  imports: [CommonModule, StyleClassModule, DividerModule, ChartModule, ButtonModule, PanelModule, FormsModule,MenuModule],
   templateUrl: './customer-topbar.component.html',
   styleUrl: './customer-topbar.component.scss'
 })
-export class CustomerTopbarComponent {
+export class CustomerTopbarComponent implements OnInit {
   searchName: string = "";
+  items: MenuItem[] | undefined;
 
   constructor(public layoutService: LayoutService, public router: Router,
     public readonly dataService: DataService, private readonly apiService: ApiService) { }
+  ngOnInit(): void {
+    this.items = [
+        {
+            label: 'Options',
+            items: [
+                {
+                    label: 'User-Profile',
+                    icon: 'pi pi-user-edit'
+                },
+                {
+                    label: 'Management Order',
+                    icon: 'pi pi-cart-arrow-down'
+                },
+                {
+                    label: 'Logout',
+                    icon: 'pi pi-sign-out'
+                }
+            ]
+        }
+    ];
+  }
 
   searchProduct() {
     this.dataService.setSearchName(this.searchName);
@@ -32,6 +57,7 @@ export class CustomerTopbarComponent {
 
   login() {
     const token = localStorage.getItem('token');
+    console.log(token)
     if (token === null) {
       this.router.navigate(['/login']);
     } else {

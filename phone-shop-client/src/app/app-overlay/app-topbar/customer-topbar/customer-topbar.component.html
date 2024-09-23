@@ -27,7 +27,9 @@
                 <span id="pn_id_266_badge" class="p-badge p-component p-badge-no-gutter">{{this.dataService.getCartLength()}}</span>
             </i>
             @if(this.dataService.getLoginStatus()){
-                <i pbadge="" value="2" class="p-element pi pi-user mr-4 p-text-secondary p-overlay-badge" style="font-size: 2rem;"></i>
+                <p-menu #menu [model]="items" [popup]="true" />
+                <i pbadge="" value="2" class="p-element pi pi-user mr-4 p-text-secondary p-overlay-badge" style="font-size: 2rem;"
+                (click)="menu.toggle($event)"></i>
             }@else {
                 <a pButton pRipple label="Login"
                     class="p-button-text p-button-rounded border-none font-light line-height-2 text-blue-500" (click)="login()"></a>

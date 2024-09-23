@@ -66,21 +66,26 @@
 
         <!-- Detail form -->
         
-        <p-dialog [(visible)]="categorytDialog" [style]="{width: '450px'}" header="Product Details" [modal]="true" class="p-fluid">
+        <p-dialog [(visible)]="categorytDialog" [style]="{width: '450px'}" header="Category Details" [modal]="true" class="p-fluid">
             <ng-template pTemplate="content">
-                <div class="field">
-                    <label for="name">Name</label>
-                    <input type="text" pInputText id="name" [(ngModel)]="category.categoryName" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !category.categoryName}"/>
-                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !category.categoryName">Name is required.</small>
-                </div>
+                <form [formGroup]="form">
+                    <div class="field">
+                        <label for="name">Category Name</label>
+                        <input type="text" pInputText id="name"  required autofocus formControlName="categoryName"/>
+                        <div class="text-red-800" *ngIf="form.get('categoryName')?.invalid && form.get('categoryName')?.touched">
+                            Category Name is required
+                          </div>
+                    </div>
+                </form>
             </ng-template>
 
             <ng-template pTemplate="footer">
                 <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button (click)="checkForm()">aaaa</button>
                 @if(isUpdate){
-                    <button pButton pRipple label="Update" icon="pi pi-check" class="p-button-text" (click)="updateCategory()"></button>
+                    <button pButton pRipple label="Update" icon="pi pi-check" class="p-button-text" (click)="updateCategory()" [disabled]="form.invalid"></button>
                 }@else {
-                    <button pButton pRipple label="Add" icon="pi pi-check" class="p-button-text" (click)="createCategory()"></button>
+                    <button pButton pRipple label="Add" icon="pi pi-check" class="p-button-text" (click)="createCategory()" [disabled]="form.invalid"></button>
                 }
             </ng-template>
         </p-dialog>
