@@ -71,9 +71,15 @@ export class LoginComponent implements OnInit {
           sessionStorage.setItem('userId', userId);
           sessionStorage.setItem('roleId', roleId);
           sessionStorage.setItem('roleName', roleName);
-          sessionStorage.setItem('token',token);
-          console.log( sessionStorage.getItem('token'))
-          this.router.navigate(['']);
+          sessionStorage.setItem('token', token);
+          localStorage.setItem('token', token);
+          console.log(sessionStorage.getItem('token'))
+          if (roleId == 1) {
+            this.router.navigate(['/admin-page']);
+          } else {
+            this.router.navigate(['']);
+          }
+
         } else {
           this.error = message;
         }
