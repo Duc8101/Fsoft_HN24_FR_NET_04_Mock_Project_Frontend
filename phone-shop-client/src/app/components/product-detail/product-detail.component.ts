@@ -16,13 +16,14 @@ export class ProductDetailComponent implements OnInit {
   productId!: number;
   product: Product = {
     productId: 0,
-    categoryName: "string",
+    categoryName: "",
     productName: "",
     image: "",
     price: 0,
     categoryId: 0,
     quantity: 0,
-    description: ""
+    description: "",
+    rate: 0
   };
   constructor(private route: ActivatedRoute, private apiService: ApiService) {
 
