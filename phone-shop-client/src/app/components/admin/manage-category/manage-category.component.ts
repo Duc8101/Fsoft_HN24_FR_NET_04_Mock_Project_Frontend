@@ -1,14 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Table } from 'primeng/table';
-import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
-import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
 import { RatingModule } from 'primeng/rating';
 import { InputTextModule } from 'primeng/inputtext';
@@ -17,12 +13,19 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
+import { ApiService } from '../../../services/api/api.services';
+import { ApiUrls } from '../../../services/api/api-url';
+import { Category } from '../../../models/category';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 
 
 @Component({
   selector: 'app-manage-category',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     TableModule,
     FileUploadModule,
     FormsModule,
@@ -36,22 +39,32 @@ import { DialogModule } from 'primeng/dialog';
     DropdownModule,
     RadioButtonModule,
     InputNumberModule,
-    DialogModule],
+    PaginatorModule,
+    DialogModule
+  ],
+  providers: [MessageService],
   templateUrl: './manage-category.component.html',
   styleUrl: './manage-category.component.scss'
 })
-export class ManageCategoryComponent {
-  productDialog: boolean = false;
+export class ManageCategoryComponent implements OnInit {
+  error = '';
 
-  deleteProductDialog: boolean = false;
+  categorytDialog: boolean = false;
 
-  deleteProductsDialog: boolean = false;
+  deleteCategoryDialog: boolean = false;
 
-  // products: Product[] = [];
+  deleteCategoriesDialog: boolean = false;
 
-  // product: Product = {};
+  categories: Category[] = [];
 
-  // selectedProducts: Product[] = [];
+  isUpdate: boolean = false;
+
+  category: Category = {
+    categoryId : 0,
+    categoryName : ""
+  }
+
+  selectedCategories: Category[] = [];
 
   submitted: boolean = false;
 
@@ -61,110 +74,180 @@ export class ManageCategoryComponent {
 
   rowsPerPageOptions = [5, 10, 20];
 
-  constructor() { }
+  pageNum: number = 0;
+
+  first: number = 0;
+
+  totalItem: number = 0;
+
+  name: string = "";
+
+  constructor(private readonly apiService: ApiService,private messageService: MessageService) { }
+
+  onPageChange(event: PaginatorState) {
+    if (event.page || event.page === 0) {
+      this.pageNum = event.page;
+      this.first = (this.pageNum) * 9;
+    }
+    this.getListCategory();
+  }
+
 
   ngOnInit() {
-     // this.productService.getProducts().then(data => this.products = data);
-
-      this.cols = [
-          { field: 'product', header: 'Product' },
-          { field: 'price', header: 'Price' },
-          { field: 'category', header: 'Category' },
-          { field: 'rating', header: 'Reviews' },
-          { field: 'inventoryStatus', header: 'Status' }
-      ];
-
-      this.statuses = [
-          { label: 'INSTOCK', value: 'instock' },
-          { label: 'LOWSTOCK', value: 'lowstock' },
-          { label: 'OUTOFSTOCK', value: 'outofstock' }
-      ];
+    this.getListCategory();
   }
 
   openNew() {
-  //    this.product = {};
-      this.submitted = false;
-      this.productDialog = true;
+    this.category = {
+        categoryId : 0,
+        categoryName : ""
+    };
+    this.submitted = false;
+    this.categorytDialog = true;
+    this.isUpdate = false;
   }
 
-  deleteSelectedProducts() {
-      this.deleteProductsDialog = true;
+  openUpdateCategory(categoryUpdate: Category) {
+      this.categorytDialog = true;
+      this.isUpdate = true; 
+      this.category.categoryId = categoryUpdate.categoryId;
+      this.category.categoryName = categoryUpdate.categoryName;
   }
 
-  // editProduct(product: Product) {
-  //     this.product = { ...product };
-  //     this.productDialog = true;
-  // }
+  openDeleteCategory(categoryDelete: Category){
+    this.deleteCategoryDialog = true;
+    this.category.categoryId = categoryDelete.categoryId;
+    this.category.categoryName = categoryDelete.categoryName;
+  }
 
-  // deleteProduct(product: Product) {
-  //     this.deleteProductDialog = true;
-  //     this.product = { ...product };
-  // }
 
   confirmDeleteSelected() {
-      this.deleteProductsDialog = false;
- //     this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-   //   this.selectedProducts = [];
-  }
-
-  confirmDelete() {
-      this.deleteProductDialog = false;
-   //   this.products = this.products.filter(val => val.id !== this.product.id);
-     // this.product = {};
+      this.deleteCategoriesDialog = false;
   }
 
   hideDialog() {
-      this.productDialog = false;
+      this.categorytDialog = false;
       this.submitted = false;
   }
 
-  // saveProduct() {
-  //     this.submitted = true;
-
-  //     if (this.product.name?.trim()) {
-  //         if (this.product.id) {
-  //             // @ts-ignore
-  //             this.product.inventoryStatus = this.product.inventoryStatus.value ? this.product.inventoryStatus.value : this.product.inventoryStatus;
-  //             this.products[this.findIndexById(this.product.id)] = this.product;
-  //             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-  //         } else {
-  //             this.product.id = this.createId();
-  //             this.product.code = this.createId();
-  //             this.product.image = 'product-placeholder.svg';
-  //             // @ts-ignore
-  //             this.product.inventoryStatus = this.product.inventoryStatus ? this.product.inventoryStatus.value : 'INSTOCK';
-  //             this.products.push(this.product);
-  //             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
-  //         }
-
-  //         this.products = [...this.products];
-  //         this.productDialog = false;
-  //         this.product = {};
-  //     }
-  // }
-
-  // findIndexById(id: string): number {
-  //     let index = -1;
-  //     for (let i = 0; i < this.products.length; i++) {
-  //         if (this.products[i].id === id) {
-  //             index = i;
-  //             break;
-  //         }
-  //     }
-
-  //     return index;
-  // }
-
-  createId(): string {
-      let id = '';
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      for (let i = 0; i < 5; i++) {
-          id += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      return id;
+  showSuccess(action: string) {
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: action + ' Successful' });
   }
 
-  onGlobalFilter(table: Table, event: Event) {
-      table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+  showError(action: string) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: action + ' Failed' });
   }
+  
+  getListCategory(){
+    let parameters: Map<string, any> = new Map();
+    parameters.set("name", this.name);
+    parameters.set("pageSize", 10);
+    parameters.set("currentPage", this.pageNum + 1);
+
+    this.apiService
+      .get(ApiUrls.URL_GET_CATEGORY_GET_CATEGORIES_PAGINATION,parameters)
+      .subscribe(
+        (response) => {
+          const code = response.code;
+          const message = response.message;
+          if (code === 200) {
+            this.categories = response.data.list;
+            this.totalItem = response.data.totalElement;
+          } else {
+            this.error = message;
+          }
+        },
+        (error) => {
+          console.error('Có lỗi xảy ra : ', error);
+        }
+      );
+  };
+
+  createCategory(){
+    this.submitted = true;
+    this.apiService
+      .post(ApiUrls.URL_CREATE_CATEGORY,this.category,null)
+      .subscribe(
+        (response) => {
+          const code = response.code;
+          const message = response.message;
+          if (code === 200) {
+            this.getListCategory();
+            this.showSuccess("Add Category");
+          } else {
+            this.error = message;
+            this.showError("Add Category");
+          }
+        },
+        (error) => {
+          console.error('Có lỗi xảy ra : ', error);
+        }
+      );
+      this.categories = [...this.categories];
+          this.categorytDialog = false;
+          this.category = {
+            categoryId : 0,
+            categoryName : ""
+          };
+  }
+
+  updateCategory(){
+    this.submitted = true;
+    console.log(this.category)
+    this.apiService
+      .put(ApiUrls.URL_UPDATE_CATEGORY+"/"+this.category.categoryId,this.category)
+      .subscribe(
+        (response) => {
+          const code = response.code;
+          const message = response.message;
+          if (code === 200) {
+            this.getListCategory();
+            this.showSuccess("Update Category");
+          } else {
+            this.error = message;
+            this.showError("Update Category");
+          }
+        },
+        (error) => {
+          console.error('Có lỗi xảy ra : ', error);
+        }
+      );
+      this.categories = [...this.categories];
+          this.categorytDialog = false;
+          this.category = {
+            categoryId : 0,
+            categoryName : ""
+          };
+    
+  };
+
+  deleteCategory(id: number){
+    this.apiService
+      .delete(ApiUrls.URL_DELETE_CATEGORY+"/"+id,null)
+      .subscribe(
+        (response) => {
+          const code = response.code;
+          const message = response.message;
+          console.log(message);
+          if (code === 200) {
+            this.getListCategory();
+            this.showSuccess("Delete Category");
+          } else {
+            this.error = message;
+            this.showError("Delete Category");
+          }
+        },
+        (error) => {
+          console.error('Có lỗi xảy ra : ', error);
+        }
+      );
+      this.deleteCategoryDialog = false;
+  }
+
+
+  onGlobalFilter(event: Event) {
+    this.name = (event.target as HTMLInputElement).value;
+    this.getListCategory();
+  }
+
 }

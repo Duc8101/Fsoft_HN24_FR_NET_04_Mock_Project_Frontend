@@ -1,20 +1,18 @@
 <div class="grid">
+    <p-toast />
     <div class="col-12">
         <div class="card px-6 py-6">
             <p-table #dt [value]="products" [columns]="cols" responsiveLayout="scroll" [rows]="10"
-                [globalFilterFields]="[]" [paginator]="true" [rowsPerPageOptions]="[10,20,30]"
-                [showCurrentPageReport]="true"
-                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                [(selection)]="selectedProducts" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                [globalFilterFields]="[]"
+                [rowHover]="true" dataKey="id">
                 <ng-template pTemplate="caption">
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
                         <h5 class="m-0">Manage Products</h5>
-                        
                         <div class="flex">
                             <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
                             <span class="block mt-2 md:mt-0 p-input-icon-left">
                                 <i class="pi pi-search"></i>
-                                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."
+                                <input pInputText type="text" (input)="onGlobalFilter($event)" placeholder="Search..."
                                     class="w-full sm:w-auto" />
                             </span>
                         </div>
@@ -23,9 +21,6 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="width: 3rem">
-                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                        </th>
                         <th pSortableColumn="productId">Id <p-sortIcon field="productId"></p-sortIcon></th>
                         <th pSortableColumn="productName">Name <p-sortIcon field="productName"></p-sortIcon></th>
                         <th>Image</th>
@@ -37,10 +32,7 @@
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-product>
-                    <tr (click)="chooseProduct(product.productId)">
-                        <td>
-                            <p-tableCheckbox [value]="product"></p-tableCheckbox>
-                        </td>
+                    <tr>
                         <td style="width:14%; min-width:10rem;"><span class="p-column-title">Code</span>
                             {{product.productId}}
                         </td>
@@ -72,15 +64,16 @@
                                     class="p-button-rounded p-button-success mr-2"
                                     (click)="openUpdateProduct(product)"></button>
                                 <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
-                                    (click)="deleteProduct(product.productId)"></button>
+                                    (click)="openDeleteProduct(product)"></button>
                             </div>
                         </td>
                     </tr>
                 </ng-template>
             </p-table>
+            <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="9" [totalRecords]="totalItem"/>
         </div>
 
-
+        <!-- Delete form -->
         <p-dialog [(visible)]="deleteProductDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
@@ -90,25 +83,16 @@
                 <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
                     (click)="deleteProductDialog = false"></button>
                 <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
-                    (click)="confirmDelete()"></button>
+                    (click)="deleteProduct(product.productId)"></button>
             </ng-template>
         </p-dialog>
 
-        <p-dialog [(visible)]="deleteProductsDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
-            <div class="flex align-items-center justify-content-center">
-                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <span>Are you sure you want to delete selected products?</span>
-            </div>
-            <ng-template pTemplate="footer">
-                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
-                    (click)="deleteProductsDialog = false"></button>
-                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
-                    (click)="confirmDeleteSelected()"></button>
-            </ng-template>
-        </p-dialog>
+
+        <!-- Detail form -->
+        
         <p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Product Details" [modal]="true" class="p-fluid">
             <ng-template pTemplate="content">
-                <img [src]="'assets/demo/images/product/' + product.image" [alt]="product.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="product.image">
+                <img [src]="product.image" [alt]="product.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="product.image">
                 <div class="field">
                     <label for="name">Name</label>
                     <input type="text" pInputText id="name" [(ngModel)]="product.productName" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !product.productName}"/>
@@ -145,7 +129,7 @@
             <ng-template pTemplate="footer">
                 <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
                 @if(isUpdate){
-                    <button pButton pRipple label="Add" icon="pi pi-check" class="p-button-text" (click)="updateProduct()"></button>
+                    <button pButton pRipple label="Update" icon="pi pi-check" class="p-button-text" (click)="updateProduct()"></button>
                 }@else {
                     <button pButton pRipple label="Add" icon="pi pi-check" class="p-button-text" (click)="createProduct()"></button>
                 }

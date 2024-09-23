@@ -6,7 +6,6 @@ import { TableModule } from 'primeng/table';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
-import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
 import { RatingModule } from 'primeng/rating';
 import { InputTextModule } from 'primeng/inputtext';
@@ -19,6 +18,9 @@ import { Product } from '../../../models/product';
 import { ApiService } from '../../../services/api/api.services';
 import { ApiUrls } from '../../../services/api/api-url';
 import { Category } from '../../../models/category';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 
 
 @Component({
@@ -39,8 +41,10 @@ import { Category } from '../../../models/category';
     DropdownModule,
     RadioButtonModule,
     InputNumberModule,
+    PaginatorModule,
     DialogModule
   ],
+  providers: [MessageService],
   templateUrl: './manage-product.component.html',
   styleUrl: './manage-product.component.scss'
 })
@@ -83,7 +87,24 @@ export class ManageProductComponent implements OnInit {
 
   rowsPerPageOptions = [5, 10, 20];
 
-  constructor(private readonly apiService: ApiService) { }
+  pageNum: number = 0;
+
+  first: number = 0;
+
+  totalItem: number = 0;
+
+  name: string = "";
+
+  constructor(private readonly apiService: ApiService,private messageService: MessageService) { }
+
+  onPageChange(event: PaginatorState) {
+    if (event.page || event.page === 0) {
+      this.pageNum = event.page;
+      this.first = (this.pageNum) * 9;
+    }
+    this.getListProduct();
+  }
+
 
   ngOnInit() {
     this.getListProduct();
@@ -104,19 +125,36 @@ export class ManageProductComponent implements OnInit {
       };
       this.submitted = false;
       this.productDialog = true;
+      this.isUpdate = false;
   }
 
   deleteSelectedProducts() {
       this.deleteProductsDialog = true;
   }
 
-  openUpdateProduct(product: Product) {
+  openUpdateProduct(productUpdate: Product) {
       this.productDialog = true;
       this.isUpdate = true; 
+      this.product.productId = productUpdate.productId;
+      this.product.productName = productUpdate.productName;
+      this.product.categoryId = productUpdate.categoryId;
+      this.product.categoryName = productUpdate.categoryName;
+      this.product.image = productUpdate.image;
+      this.product.description = productUpdate.description;
+      this.product.quantity = productUpdate.quantity;
+      this.product.price = productUpdate.price;
   }
 
-  openDeleteProduct(){
+  openDeleteProduct(productDelete: Product){
     this.deleteProductDialog = true;
+    this.product.productId = productDelete.productId;
+    this.product.productName = productDelete.productName;
+    this.product.categoryId = productDelete.categoryId;
+    this.product.categoryName = productDelete.categoryName;
+    this.product.image = productDelete.image;
+    this.product.description = productDelete.description;
+    this.product.quantity = productDelete.quantity;
+    this.product.price = productDelete.price;
   }
 
 
@@ -124,25 +162,18 @@ export class ManageProductComponent implements OnInit {
       this.deleteProductsDialog = false;
   }
 
-  confirmDelete() {
-      this.deleteProductDialog = false;
-      this.products = this.products.filter(val => val.productId !== this.product.productId);
-      this.product = {
-        productId: 0,
-        categoryName: "",
-        productName: "",
-        image: "",
-        price: 0,
-        categoryId: 0,
-        quantity: 0,
-        description: "",
-        rate : 0
-      };
-  }
 
   hideDialog() {
       this.productDialog = false;
       this.submitted = false;
+  }
+
+  showSuccess(action: string) {
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: action + ' Successful' });
+  }
+
+  showError(action: string) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: action + ' Failed' });
   }
 
   // saveProduct() {
@@ -182,8 +213,10 @@ export class ManageProductComponent implements OnInit {
 
   getListProduct(){
     let parameters: Map<string, any> = new Map();
+    parameters.set("name", this.name);
     parameters.set("pageSize", 10);
-    parameters.set("currentPage", 1);
+    parameters.set("currentPage", this.pageNum + 1);
+
 
     this.apiService
       .post(ApiUrls.URL_GET_ALL_PRODUCTS,[], parameters)
@@ -193,6 +226,7 @@ export class ManageProductComponent implements OnInit {
           const message = response.message;
           if (code === 200) {
             this.products = response.data.list;
+            this.totalItem = response.data.totalElement;
           } else {
             this.error = message;
           }
@@ -233,8 +267,10 @@ export class ManageProductComponent implements OnInit {
           const message = response.message;
           if (code === 200) {
             this.getListProduct();
+            this.showSuccess("Add Product");
           } else {
             this.error = message;
+            this.showError("Add Product");
           }
         },
         (error) => {
@@ -265,8 +301,10 @@ export class ManageProductComponent implements OnInit {
           const message = response.message;
           if (code === 200) {
             this.getListProduct();
+            this.showSuccess("Update Product");
           } else {
             this.error = message;
+            this.showError("Update Product");
           }
         },
         (error) => {
@@ -284,42 +322,36 @@ export class ManageProductComponent implements OnInit {
             rate: 0,
             quantity: 0,
             description: ""};
-    this.isUpdate = false;
+    
   };
 
   deleteProduct(id: number){
-    let parameters: Map<string, any> = new Map();
-    parameters.set("productId", id);
-    console.log(id)
-
     this.apiService
       .delete(ApiUrls.URL_DELETE_PRODUCT+"/"+id,null)
       .subscribe(
         (response) => {
           const code = response.code;
           const message = response.message;
+          console.log(message);
           if (code === 200) {
             this.getListProduct();
+            this.showSuccess("Delete Product");
           } else {
             this.error = message;
+            this.showError("Delete Product");
           }
         },
         (error) => {
           console.error('Có lỗi xảy ra : ', error);
         }
       );
+
+      this.deleteProductDialog = false;
   }
 
 
-  onGlobalFilter(table: Table, event: Event) {
-      table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
-  }
-
-  chooseProduct(id: number){
-    let findProduct = this.products.find(p => p.productId == id)
-    if(findProduct){
-        this.product = findProduct;
-    }
-    this.statusButton = "Update";
+  onGlobalFilter(event: Event) {
+    this.name = (event.target as HTMLInputElement).value;
+    this.getListProduct();
   }
 }

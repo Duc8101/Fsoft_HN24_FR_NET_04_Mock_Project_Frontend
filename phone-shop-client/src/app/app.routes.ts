@@ -7,6 +7,7 @@ import { SearchComponent } from './components/search/search.component';
 import { AllProductComponent } from './components/all-product/all-product.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 import { ManageProductComponent } from './components/admin/manage-product/manage-product.component';
+import { ManageCategoryComponent } from './components/admin/manage-category/manage-category.component';
 
 export const routes : Routes = [
   {path : 'login', component : LoginComponent},
@@ -16,4 +17,5 @@ export const routes : Routes = [
   {path : 'all-product', component : AllProductComponent},
   {path : 'product-detail/:id', component : ProductDetailComponent},
   {path : 'manage-product', component : ManageProductComponent},
+  {path : 'manage-category', component : ManageCategoryComponent},
 ];

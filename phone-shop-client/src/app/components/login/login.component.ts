@@ -72,6 +72,7 @@ export class LoginComponent implements OnInit {
           sessionStorage.setItem('roleId', roleId);
           sessionStorage.setItem('roleName', roleName);
           sessionStorage.setItem('token',token);
+          console.log( sessionStorage.getItem('token'))
           this.router.navigate(['']);
         } else {
           this.error = message;
