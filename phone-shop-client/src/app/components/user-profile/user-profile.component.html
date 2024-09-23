@@ -1,1 +1,66 @@
-<p>user-profile works!</p>
+<div class="container mx-8">
+    <div class="card">
+        <div class="card p-fluid">
+            <div class="">
+                <form>
+                    <div class="field">
+                        <label htmlFor="fullName">Full Name</label>
+                        <input type="text" pInputText name="fullName" [(ngModel)]="user.fullName"/>
+                    </div>
+                    <div class="field">
+                        <label htmlFor="phone">Phone</label>
+                        <input type="text" pInputText name="phone" [(ngModel)]="user.phone"/>
+                    </div>
+                    <div class="field">
+                        <label htmlFor="email">Email</label>
+                        <input type="text" pInputText name="email" [(ngModel)]="user.email" />
+                    </div>
+                    <div class="field">
+                        <label htmlFor="address">Address</label>
+                        <input type="text" pInputText name="address" [(ngModel)]="user.address"/>
+                    </div>
+                    <div class="field">
+                        <label htmlFor="username">Username</label>
+                        <input type="text" pInputText name="username" [(ngModel)]="user.username"/>
+                    </div>
+                </form>
+                <p-dialog [visible]="dialogUpdate" [style]="{width: '450px'}" header="User Profile" [modal]="true"
+                    class="p-fluid">
+                    <ng-template pTemplate="content">
+                        <form [formGroup]="formUpdate" onsubmit="updateUser()">
+                            <div class="field">
+                                <label htmlFor="fullName">Full Name</label>
+                                <input type="text" pInputText name="fullName" [(ngModel)]="userUpdate.fullName" formControlName="fullName" />
+                                <div class="text-red-800"
+                                    *ngIf="formUpdate.get('fullName')?.invalid && formUpdate.get('fullName')?.touched">
+                                    Full Name is required
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label htmlFor="phone">Phone</label>
+                                <input type="text" pInputText name="phone" [(ngModel)]="userUpdate.phone" formControlName="phone" />
+                            </div>
+                            <div class="field">
+                                <label htmlFor="email">Email</label>
+                                <input type="text" pInputText name="email" [(ngModel)]="userUpdate.email" formControlName="email" />
+                                <div class="text-red-800" *ngIf="formUpdate.get('image')?.invalid && formUpdate.get('image')?.touched">
+                                    Email is required
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label htmlFor="address">Address</label>
+                                <input type="text" pInputText name="address" [(ngModel)]="userUpdate.address" formControlName="address" />
+                            </div>
+                        </form>
+                    </ng-template>
+                    <ng-template pTemplate="footer">
+                        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                        <button pButton pRipple label="Update" icon="pi pi-check" class="p-button-text" (click)="updateUser()" [disabled]="formUpdate.invalid"></button>
+                    </ng-template>
+                </p-dialog>
+            </div>
+        </div>
+        <button pButton pRipple type="button" label="Change Password" (click)="openChangePassword()"></button>
+        <button pButton pRipple type="button" label="Update" (click)="openUpdateUser()"></button>
+    </div>
+</div>

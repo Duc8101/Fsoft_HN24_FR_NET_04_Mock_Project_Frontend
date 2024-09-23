@@ -11,6 +11,7 @@ import { AdminGuard } from './services/admin.guard';
 import { CustomerGuard } from './services/customer.guard';
 import { GuestGuard } from './services/guest.guard';
 import { CustomerGuestGuard } from './services/customer-guest.guard';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 export const routes : Routes = [
   {path : 'login', component : LoginComponent,canActivate: [GuestGuard]},
@@ -20,4 +21,5 @@ export const routes : Routes = [
   {path : 'all-product', component : AllProductComponent,canActivate: [CustomerGuestGuard]},
   {path : 'product-detail/:id', component : ProductDetailComponent,canActivate: [CustomerGuestGuard]},
   {path : 'admin-page', component : AdminPageComponent,canActivate: [AdminGuard]},
+  {path : 'user-profile', component : UserProfileComponent},
 ];

@@ -66,6 +66,7 @@ export class CustomerTopbarComponent implements OnInit {
       this.apiService.get(ApiUrls.URL_GET_USER_BY_TOKEN, parameters).subscribe(
         (response) => {
           const code = response.code;
+          console.log(code)
           if (code === 200) {
             console.log(`token : ${token}`);
             sessionStorage.setItem('token', token);
