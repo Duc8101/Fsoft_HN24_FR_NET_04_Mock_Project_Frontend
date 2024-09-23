@@ -1,0 +1,23 @@
+<div class="grid mx-3 mt-5">
+    <div class="col-12 md:col-2">
+        <div class="card">
+            <a routerlinkactive="" tabindex="0" pripple=""
+            class="p-ripple p-element ng-tns-c183498709-8 ng-star-inserted" (click)="chooseManagement('product')"> 
+            Product Management
+            </a>
+            <br>
+            <a routerlinkactive="" tabindex="0" pripple=""
+            class="p-ripple p-element ng-tns-c183498709-8 ng-star-inserted" (click)="chooseManagement('category')">
+            Category Management
+            </a> 
+        </div>
+    </div>
+    <div class="col-12 md:col-9">
+        @if(model == 'product'){
+            <app-manage-product></app-manage-product>
+        }
+        @if(model == 'category'){
+            <app-manage-category></app-manage-category>
+        }
+    </div> 
+</div>

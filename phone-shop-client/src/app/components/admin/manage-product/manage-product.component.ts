@@ -21,10 +21,11 @@ import { Category } from '../../../models/category';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
-
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-manage-category',
+  selector: 'app-manage-product',
   standalone: true,
   imports: [
     CommonModule,
@@ -42,7 +43,8 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
     RadioButtonModule,
     InputNumberModule,
     PaginatorModule,
-    DialogModule
+    DialogModule,
+    ReactiveFormsModule 
   ],
   providers: [MessageService],
   templateUrl: './manage-product.component.html',
@@ -95,7 +97,18 @@ export class ManageProductComponent implements OnInit {
 
   name: string = "";
 
-  constructor(private readonly apiService: ApiService,private messageService: MessageService) { }
+  form: FormGroup;
+
+  constructor(private readonly apiService: ApiService,private messageService: MessageService) { 
+    this.form = new FormGroup({
+      quantity: new FormControl('', [Validators.required]),
+      productName: new FormControl('', [Validators.required]),
+      image: new FormControl('', [Validators.required]),
+      price: new FormControl('', [Validators.required]),
+      categoryId: new FormControl('', [Validators.required]),
+      description: new FormControl('', [Validators.required]),
+    });
+  }
 
   onPageChange(event: PaginatorState) {
     if (event.page || event.page === 0) {
