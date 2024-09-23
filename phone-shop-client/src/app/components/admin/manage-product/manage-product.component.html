@@ -1,0 +1,162 @@
+<div class="grid">
+    <p-toast />
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-table #dt [value]="products" [columns]="cols" responsiveLayout="scroll" [rows]="10"
+                [globalFilterFields]="[]"
+                [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Manage Products</h5>
+                        <div class="flex">
+                            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="onGlobalFilter($event)" placeholder="Search..."
+                                    class="w-full sm:w-auto" />
+                            </span>
+                        </div>
+                        
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="productId">Id <p-sortIcon field="productId"></p-sortIcon></th>
+                        <th pSortableColumn="productName">Name <p-sortIcon field="productName"></p-sortIcon></th>
+                        <th>Image</th>
+                        <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
+                        <th pSortableColumn="categoryName">Category <p-sortIcon field="categoryName"></p-sortIcon></th>
+                        <th pSortableColumn="rate">Rate <p-sortIcon field="rate"></p-sortIcon></th>
+                        <th pSortableColumn="quantity">Quantity <p-sortIcon field="quantity"></p-sortIcon></th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-product>
+                    <tr>
+                        <td style="width:10%; min-width:5rem;"><span class="p-column-title">Code</span>
+                            {{product.productId}}
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Name</span>
+                            {{product.productName}}
+                        </td>
+                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">Image</span>
+                            <img [src]="product.image" [alt]="product.productName" width="100" class="shadow-4" />
+                        </td>
+                        <td style="width:14%; min-width:8rem;">
+                            <span class="p-column-title">Price</span>
+                            {{product.price | currency:'USD'}}
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Category</span>
+                            {{product.categoryName}}
+                        </td>
+                        <td style="width:14%; min-width: 10rem;"><span class="p-column-title">Rate</span>
+                            <p-rating [ngModel]="product.rate" [readonly]="true" [cancel]="false"></p-rating>
+                        </td>
+                        <td style="width:10%; min-width: 5rem;"><span class="p-column-title">Quantity</span>
+                            <span class="p-column-title">Quantity</span>
+                            {{product.quantity}}
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-success mr-2"
+                                    (click)="openUpdateProduct(product)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                                    (click)="openDeleteProduct(product)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="9" [totalRecords]="totalItem"/>
+        </div>
+
+        <!-- Delete form -->
+        <p-dialog [(visible)]="deleteProductDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="product">Are you sure you want to delete <b>{{product.productName}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteProductDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                    (click)="deleteProduct(product.productId)"></button>
+            </ng-template>
+        </p-dialog>
+
+
+        <!-- Detail form -->
+        
+        <p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Product Details" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+                <img [src]="product.image" [alt]="product.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="product.image">
+                <form [formGroup]="form">
+                    <div class="field">
+                        <label for="name">Name</label>
+                        <input type="text" pInputText id="name" [(ngModel)]="product.productName" required autofocus formControlName="productName"/>
+                        <div class="text-red-800" *ngIf="form.get('productName')?.invalid && form.get('productName')?.touched">
+                            Name is required
+                          </div>
+                    </div>
+                    <div class="field">
+                        <label for="description">Image</label>
+                        <input type="text" pInputText id="category" [(ngModel)]="product.image" required autofocus formControlName="image"/>
+                        <div class="text-red-800" *ngIf="form.get('image')?.invalid && form.get('image')?.touched">
+                            Image is required
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="category">Category</label>
+                        <select class="form-select" [(ngModel)]="product.categoryId" formControlName="categoryId">
+                            @for(category of categories; track $index){
+                                @if($index == 1){
+                                    <option value="{{category.categoryId}}" selected>{{category.categoryName}}</option>
+                                }@else {
+                                    <option value="{{category.categoryId}}">{{category.categoryName}}</option>
+                                }
+                            }
+                        </select>
+                        <div class="text-red-800" *ngIf="form.get('categoryId')?.invalid && form.get('categoryId')?.touched">
+                            Category is required
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="description">Description</label>
+                        <textarea id="description" pInputTextarea [(ngModel)]="product.description" required rows="3" cols="20"  formControlName="description"></textarea>
+                        <div class="text-red-800" *ngIf="form.get('description')?.invalid && form.get('description')?.touched">
+                            Description is required
+                        </div>
+                    </div>
+                    <div class="formgrid grid">
+                        <div class="field col">
+                            <label for="price">Price</label>
+                            <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD" locale="en-US"  formControlName="price"></p-inputNumber>
+                            <div class="text-red-800" *ngIf="form.get('price')?.invalid && form.get('price')?.touched">
+                                Price is required
+                            </div>
+                        </div>
+                        <div class="field col">
+                            <label for="quantity">Quantity</label>
+                            <p-inputNumber id="quantity" [(ngModel)]="product.quantity"  formControlName="quantity"></p-inputNumber>
+                            <div class="text-red-800" *ngIf="form.get('quantity')?.invalid && form.get('quantity')?.touched">
+                                Quantity is required
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                @if(isUpdate){
+                    <button pButton pRipple label="Update" icon="pi pi-check" class="p-button-text" (click)="updateProduct()" [disabled]="form.invalid"></button>
+                }@else {
+                    <button pButton pRipple label="Add" icon="pi pi-check" class="p-button-text" (click)="createProduct()" [disabled]="form.invalid"></button>
+                }
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

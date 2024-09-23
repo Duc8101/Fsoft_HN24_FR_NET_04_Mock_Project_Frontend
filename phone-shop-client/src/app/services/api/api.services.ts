@@ -57,7 +57,6 @@ export class ApiService {
   }
 
   post(url: string, body: any, parameters: Map<string, any> | null): Observable<any> {
-
     let param: string[] = [];
 
     if (parameters != null && parameters.size > 0) {

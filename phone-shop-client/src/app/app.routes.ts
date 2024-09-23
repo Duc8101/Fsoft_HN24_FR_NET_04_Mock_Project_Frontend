@@ -6,18 +6,28 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { SearchComponent } from './components/search/search.component';
 import { AllProductComponent } from './components/all-product/all-product.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
+import { AdminPageComponent } from './components/admin/admin-page/admin-page.component';
+import { AdminGuard } from './services/admin.guard';
+import { CustomerGuard } from './services/customer.guard';
+import { GuestGuard } from './services/guest.guard';
+import { CustomerGuestGuard } from './services/customer-guest.guard';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { CartComponent } from './components/customer/cart/cart.component';
 import { CheckoutComponent } from './components/customer/checkout/checkout.component';
 import { CustomerOrdersManagementComponent } from './components/customer/customer-orders-management/customer-orders-management.component';
+import { SellerOrdersManagementComponent } from './components/admin/seller-orders-management/seller-orders-management.component';
 
 export const routes : Routes = [
-  {path : 'login', component : LoginComponent},
-  {path : 'register', component : RegisterComponent},
-  {path : 'forgot-password', component : ForgotPasswordComponent},
-  {path : 'search', component : SearchComponent},
-  {path : 'all-product', component : AllProductComponent},
-  {path : 'product-detail/:id', component : ProductDetailComponent},
+  {path : 'login', component : LoginComponent,canActivate: [GuestGuard]},
+  {path : 'register', component : RegisterComponent,canActivate: [GuestGuard]},
+  {path : 'forgot-password', component : ForgotPasswordComponent,canActivate: [GuestGuard]},
+  {path : 'search', component : SearchComponent,canActivate: [CustomerGuestGuard]},
+  {path : 'all-product', component : AllProductComponent,canActivate: [CustomerGuestGuard]},
+  {path : 'product-detail/:id', component : ProductDetailComponent,canActivate: [CustomerGuestGuard]},
+  {path : 'admin-page', component : AdminPageComponent,canActivate: [AdminGuard]},
+  {path : 'user-profile', component : UserProfileComponent},
   {path : 'cart', component : CartComponent},
   {path : 'checkout', component : CheckoutComponent},
   {path : 'customer-orders-management', component : CustomerOrdersManagementComponent}, 
+  {path : 'seller-orders-management', component : SellerOrdersManagementComponent}, 
 ];

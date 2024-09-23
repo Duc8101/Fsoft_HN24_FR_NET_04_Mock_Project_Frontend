@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 
+
 @Injectable({
   providedIn: 'root',
 })
@@ -11,6 +12,8 @@ export class DataService {
     private searchName :string = "";
     private callFunctionSource = new Subject<void>();
     callFunction$ = this.callFunctionSource.asObservable();
+    
+
     constructor() {}
 
     triggerFunctionCall() {
