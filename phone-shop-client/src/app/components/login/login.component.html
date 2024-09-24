@@ -11,12 +11,12 @@
     <div>
       <form [formGroup]="formLogin" (ngSubmit)="submit()">
         <label for="Username" class="block text-900 font-medium mb-2">Username</label>
-        <input id="Username" type="text" pInputText class="w-full mb-3" formControlName="username">
+        <input pInputText id="Username" type="text" pInputText class="w-full mb-3" formControlName="username">
         <br>
         <p style="color: red;" *ngIf="(usernameInput.hasError('required') || usernameInput.hasError('whitespace')) && usernameInput.touched">Username is required</p>
   
         <label for="Password" class="block text-900 font-medium mb-2">Password</label>
-        <input id="Password" type="password" pInputText class="w-full mb-3" formControlName="password">
+        <input pInputText id="Password" type="password" pInputText class="w-full mb-3" formControlName="password">
   
         <p style="color: red;" *ngIf="(passwordInput.hasError('required') || passwordInput.hasError('whitespace')) && passwordInput.touched">Password is required and doesn't contain all space</p>
         <div class="flex align-items-center justify-content-between mb-6">

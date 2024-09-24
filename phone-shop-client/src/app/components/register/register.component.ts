@@ -4,19 +4,28 @@ import { ApiService } from '../../services/api/api.services';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { Register } from '../../models/register';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, ButtonModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ButtonModule, InputTextModule],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss'
+  styleUrl: './register.component.scss',
+  providers: [MessageService]
 })
 export class RegisterComponent {
   error = '';
   formRegister: FormGroup;
+  register? : Register;
 
-  constructor(private readonly formBuilder: FormBuilder, private readonly apiService: ApiService, private readonly router: Router) {
+  constructor(private readonly formBuilder: FormBuilder,
+    private readonly apiService: ApiService,
+    private readonly router: Router,
+    private messageService: MessageService)
+  {
     this.formRegister = this.formBuilder.group({
       username: this.formBuilder.control('', [Validators.required, this.noWhitespaceValidator()]),
       password: this.formBuilder.control('', [Validators.required]),
@@ -81,6 +90,35 @@ export class RegisterComponent {
 
 
   submit(){
+    // call api create order
+    this.register = {
+      username: this.usernameInput.value,
+      fullName : this.fullnameInput.value,
+      phone : this.phoneInput.value,
+      email: this.emailInput.value,
+      address: this.addressInput.value,
+      password: this.passwordInput.value,
+      confirmPassword: this.rePasswordInput.value,
+    };
 
+    console.log(this.register);
+
+    this.apiService
+    .post('http://localhost:5125/User/Register', this.register, null)
+    .subscribe(
+      (response) => {
+        const code = response.code;
+        const message = response.message;
+        if (code === 200) {
+          this.router.navigate(['/login']);
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong!' });
+        }
+      },
+
+      (error) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong!' });
+      }
+    );
   }
 }

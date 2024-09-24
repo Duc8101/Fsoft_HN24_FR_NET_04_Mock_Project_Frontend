@@ -108,7 +108,5 @@ export class CheckoutComponent {
         console.error('Có lỗi xảy ra : ', error);
       }
     );
-
-    
   }
 }

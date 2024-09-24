@@ -64,7 +64,7 @@
             </p-table>
             <div class="mt-2 text-right">
                 <h5 class="mt-5">Total orders price: {{totalPrice}}$</h5>
-                <p-button label="Submit" (onClick)="submit()"/>
+                <p-button [disabled]="selectedProducts.length === 0" label="Submit" (onClick)="submit()"/>
             </div>
         </div>
     </div>

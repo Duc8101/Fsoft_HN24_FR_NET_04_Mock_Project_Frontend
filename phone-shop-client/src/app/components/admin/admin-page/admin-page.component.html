@@ -5,11 +5,16 @@
             class="p-ripple p-element ng-tns-c183498709-8 ng-star-inserted" (click)="chooseManagement('product')"> 
             Product Management
             </a>
-            <br>
+            <p-divider/>
             <a routerlinkactive="" tabindex="0" pripple=""
             class="p-ripple p-element ng-tns-c183498709-8 ng-star-inserted" (click)="chooseManagement('category')">
             Category Management
-            </a> 
+            </a>
+            <p-divider/> 
+            <a routerlinkactive="" tabindex="0" pripple=""
+            class="p-ripple p-element ng-tns-c183498709-8 ng-star-inserted" (click)="chooseManagement('orders')">
+            Orders Management
+            </a>
         </div>
     </div>
     <div class="col-12 md:col-9">
@@ -18,6 +23,9 @@
         }
         @if(model == 'category'){
             <app-manage-category></app-manage-category>
+        }
+        @if(model == 'orders'){
+            <app-seller-orders-management></app-seller-orders-management>
         }
     </div> 
 </div>
