@@ -19,6 +19,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { TagModule } from 'primeng/tag';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { DialogModule } from 'primeng/dialog';
+import { ApiUrls } from '../../services/api/api-url';
 
 @Component({
   selector: 'app-all-product',
@@ -66,6 +67,30 @@ export class AllProductComponent implements OnInit {
     this.getCategories();
     this.minPrice = 0;
     this.maxPrice = 0;
+  }
+
+  addToCart(id: string){
+    let body = {
+      productId: id
+    }
+    this.apiService
+    .post(ApiUrls.URL_CART_CREATE,body, null)
+    .subscribe(
+      (response) => {
+        const code = response.code;
+        const message = response.message;
+        if (code === 200) {
+          this.products = response.data.list;
+          this.totalItem = response.data.totalElement;
+        } else {
+          this.error = message;
+        }
+      },
+
+      (error) => {
+        console.error('Có lỗi xảy ra : ', error);
+      }
+    );
   }
 
   getData() {

@@ -17,5 +17,7 @@ export class ApiUrls{
     static readonly URL_UPDATE_USER: string = "http://localhost:5125/User/update-profile";
     static readonly URL_CHANGE_PASSWORD: string = "http://localhost:5125/User/change-password";
     static readonly URL_LOGOUT: string = "http://localhost:5125/User/Logout";
+    static readonly URL_CART_CREATE: string = "http://localhost:5125/Cart/Create";
+
 
 }

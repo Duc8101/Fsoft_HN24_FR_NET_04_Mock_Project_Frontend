@@ -26,8 +26,8 @@ export const routes : Routes = [
   {path : 'product-detail/:id', component : ProductDetailComponent,canActivate: [CustomerGuestGuard]},
   {path : 'admin-page', component : AdminPageComponent,canActivate: [AdminGuard]},
   {path : 'user-profile', component : UserProfileComponent},
-  {path : 'cart', component : CartComponent},
-  {path : 'checkout', component : CheckoutComponent},
-  {path : 'customer-orders-management', component : CustomerOrdersManagementComponent}, 
+  {path : 'cart', component : CartComponent,canActivate: [CustomerGuard]},
+  {path : 'checkout', component : CheckoutComponent,canActivate: [CustomerGuard]},
+  {path : 'customer-orders-management', component : CustomerOrdersManagementComponent,canActivate: [CustomerGuard]}, 
   {path : 'seller-orders-management', component : SellerOrdersManagementComponent}, 
 ];
