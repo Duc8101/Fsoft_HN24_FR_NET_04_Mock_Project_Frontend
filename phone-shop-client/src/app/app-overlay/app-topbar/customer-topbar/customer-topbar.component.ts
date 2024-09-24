@@ -42,7 +42,10 @@ export class CustomerTopbarComponent implements OnInit {
                 },
                 {
                     label: 'Logout',
-                    icon: 'pi pi-sign-out'
+                    icon: 'pi pi-sign-out',
+                    command: () => {
+                      this.logout();
+                    }
                 }
             ]
         }
@@ -53,6 +56,30 @@ export class CustomerTopbarComponent implements OnInit {
     this.dataService.setSearchName(this.searchName);
     this.dataService.triggerFunctionCall();
     this.router.navigate(['/search']);
+  }
+
+  logout(){
+    this.apiService.get(ApiUrls.URL_LOGOUT,null).subscribe(
+      (response) => {
+        const code = response.code;
+        console.log(code)
+        if (code === 200) {
+          this.router.navigate(['/login']);
+          sessionStorage.clear();
+          localStorage.clear();
+        } else {
+          alert(`${response.message}`);
+        }
+      },
+
+      (error) => {
+        if (error.status === 401) {
+          alert('Unauthorized');
+        } else {
+          console.error('Có lỗi xảy ra : ', error);
+        }
+      }
+    );
   }
 
   login() {
