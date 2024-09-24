@@ -50,7 +50,6 @@
     <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="9" [totalRecords]="totalItem" />
 </div>
 <p-confirmPopup />
-<p-toast />
 <p-dialog header="Order Id: {{currentOrderId}}" [(visible)]="visible" [modal]="true" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
     [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
     <p-table [value]="cartItems" scrollDirection="both" [scrollable]="true" scrollHeight="400px" styleClass="mt-3" responsiveLayout="scroll">

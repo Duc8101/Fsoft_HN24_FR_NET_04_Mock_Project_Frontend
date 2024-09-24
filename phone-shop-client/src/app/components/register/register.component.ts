@@ -8,6 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { Register } from '../../models/register';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { ToastService } from '../../services/toastService';
 
 @Component({
   selector: 'app-register',
@@ -15,7 +16,7 @@ import { ToastModule } from 'primeng/toast';
   imports: [CommonModule, FormsModule, ReactiveFormsModule, ButtonModule, InputTextModule, ToastModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
-  providers: [MessageService]
+  providers: [ToastService]
 })
 export class RegisterComponent {
   error = '';
@@ -25,7 +26,7 @@ export class RegisterComponent {
   constructor(private readonly formBuilder: FormBuilder,
     private readonly apiService: ApiService,
     private readonly router: Router,
-    private messageService: MessageService)
+    private toastService: ToastService)
   {
     this.formRegister = this.formBuilder.group({
       username: this.formBuilder.control('', [Validators.required, this.noWhitespaceValidator()]),
@@ -113,12 +114,12 @@ export class RegisterComponent {
         if (code === 200) {
           this.router.navigate(['/login']);
         } else {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong!' });
+          this.toastService.showError("Register Fail!");
         }
       },
 
       (error) => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong!' });
+        this.toastService.showError("Register Fail!");
       }
     );
   }
