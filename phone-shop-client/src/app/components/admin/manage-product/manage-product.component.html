@@ -152,9 +152,9 @@
             <ng-template pTemplate="footer">
                 <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
                 @if(isUpdate){
-                    <button pButton pRipple label="Update" icon="pi pi-check" class="p-button-text" (click)="updateProduct()" disabled="{{form.invalid}}"></button>
+                    <button pButton pRipple label="Update" icon="pi pi-check" class="p-button-text" (click)="updateProduct()" [disabled]="form.invalid"></button>
                 }@else {
-                    <button pButton pRipple label="Add" icon="pi pi-check" class="p-button-text" (click)="createProduct()" disabled="{{form.invalid}}"></button>
+                    <button pButton pRipple label="Add" icon="pi pi-check" class="p-button-text" (click)="createProduct()" [disabled]="form.invalid"></button>
                 }
             </ng-template>
         </p-dialog>

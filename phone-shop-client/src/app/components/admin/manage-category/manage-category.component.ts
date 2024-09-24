@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
@@ -40,7 +40,8 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
     RadioButtonModule,
     InputNumberModule,
     PaginatorModule,
-    DialogModule
+    DialogModule,
+    ReactiveFormsModule
   ],
   providers: [MessageService],
   templateUrl: './manage-category.component.html',
@@ -82,7 +83,13 @@ export class ManageCategoryComponent implements OnInit {
 
   name: string = "";
 
-  constructor(private readonly apiService: ApiService,private messageService: MessageService) { }
+  form: FormGroup;
+
+  constructor(private readonly apiService: ApiService,private messageService: MessageService) {
+    this.form = new FormGroup({
+        categoryName: new FormControl('', [Validators.required]),
+      });
+   }
 
   onPageChange(event: PaginatorState) {
     if (event.page || event.page === 0) {
@@ -95,6 +102,12 @@ export class ManageCategoryComponent implements OnInit {
 
   ngOnInit() {
     this.getListCategory();
+  }
+
+  checkForm(){
+    console.log(this.form.valid)
+    console.log(this.form.get('categoryName')?.value);
+    
   }
 
   openNew() {

@@ -13,4 +13,6 @@ export class ApiUrls{
     static readonly URL_DELETE_CATEGORY: string = "http://localhost:5125/Category/Delete";
     static readonly URL_GET_CATEGORY_DETAIL: string = "http://localhost:5125/Category/Detail";
     static readonly URL_GET_CATEGORY_GET_CATEGORIES_PAGINATION: string = "http://localhost:5125/Category/get-categories-pagination";
+    static readonly URL_GET_USER_DETAIL: string = "http://localhost:5125/User/Detail";
+    static readonly URL_UPDATE_USER: string = "http://localhost:5125/User/update-profile";
 }
