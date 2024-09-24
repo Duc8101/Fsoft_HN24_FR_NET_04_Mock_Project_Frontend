@@ -19,6 +19,7 @@ import { OrderDto } from '../../../models/orderDto';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { DialogModule } from 'primeng/dialog';
+import { ToastService } from '../../../services/toastService';
 
 @Component({
   selector: 'app-customer-orders-management',
@@ -41,13 +42,13 @@ import { DialogModule } from 'primeng/dialog';
   ],
   templateUrl: './customer-orders-management.component.html',
   styleUrl: './customer-orders-management.component.scss',
-  providers: [ConfirmationService, MessageService]
+  providers: [ConfirmationService, ToastService]
 })
 export class CustomerOrdersManagementComponent implements OnInit {
 
   constructor(private apiService: ApiService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private toastService: ToastService
   ) {
 
   }
@@ -230,10 +231,10 @@ export class CustomerOrdersManagementComponent implements OnInit {
       icon: 'pi pi-info-circle',
       acceptButtonStyleClass: 'p-button-danger p-button-sm',
       accept: () => {
-        this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'Order deleted', life: 3000 });
+        this.toastService.showSuccess("Success!");
       },
       reject: () => {
-        this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
+        this.toastService.showWarn("Reject!");
       }
     });
   }

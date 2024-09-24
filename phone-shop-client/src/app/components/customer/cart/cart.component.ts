@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ToastModule } from 'primeng/toast';
 import { Table, TableModule } from 'primeng/table';
 import { CartItem } from '../../../models/cart';
-import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { InputTextModule } from 'primeng/inputtext';
@@ -13,6 +12,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../../services/api/api.services';
 import { Router } from '@angular/router';
+import { ToastService } from '../../../services/toastService';
 
 @Component({
   selector: 'app-cart',
@@ -29,13 +29,13 @@ import { Router } from '@angular/router';
     FormsModule],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss',
-  providers: [MessageService]
+  providers: [ToastService]
 })
 export class CartComponent implements OnInit {
   constructor(
     private readonly apiService: ApiService,
     private readonly routers: Router,
-    private messageService: MessageService
+    private toastService: ToastService
   ) { }
 
   cartItems: CartItem[] = [
@@ -141,14 +141,14 @@ export class CartComponent implements OnInit {
           if (code === 200) {
             this.cartItems = response.data.cartDetailDTOs;
             this.username = response.data.customer;
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Delete cart item success' });
+            this.toastService.showSuccess("Delete success!");
           } else {
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Message Content' });
+            this.toastService.showError(message);
           }
         },
 
         (error) => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Message Content' });
+          this.toastService.showError("Something went wrong!");
         }
       );
   }

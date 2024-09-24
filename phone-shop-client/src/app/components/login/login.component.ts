@@ -11,13 +11,15 @@ import { Media } from '../../services/api/media';
 import { ApiUrls } from '../../services/api/api-url';
 import { DataService } from '../../services/data.service';
 import { InputTextModule } from 'primeng/inputtext';
+import { ToastService } from '../../services/toastService';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, CheckboxModule, ButtonModule, InputTextModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrl: './login.component.scss',
+  providers: [ToastService]
 })
 export class LoginComponent implements OnInit {
   error = '';
@@ -25,7 +27,7 @@ export class LoginComponent implements OnInit {
   test: number = 0;
 
   constructor(private readonly formBuilder: FormBuilder, private readonly apiService: ApiService,
-    private readonly router: Router, private readonly dataService: DataService) {
+    private readonly router: Router, private readonly dataService: DataService, private toastService: ToastService) {
     this.formLogin = this.formBuilder.group({
       username: this.formBuilder.control('', [Validators.required, this.noWhitespaceValidator()]),
       password: this.formBuilder.control('', [Validators.required, this.noWhitespaceValidator()]),
@@ -74,6 +76,7 @@ export class LoginComponent implements OnInit {
           sessionStorage.setItem('roleName', roleName);
           sessionStorage.setItem('token', token);
           localStorage.setItem('token', token);
+          this.toastService.showSuccess("Login success!");
           console.log(sessionStorage.getItem('token'))
           if (roleId == 1) {
             this.router.navigate(['/admin-page']);
@@ -82,12 +85,12 @@ export class LoginComponent implements OnInit {
           }
 
         } else {
-          this.error = message;
+          this.toastService.showError(message);
         }
       },
 
       error => {
-        console.error('Có lỗi xảy ra : ', error);
+        this.toastService.showError("Something went wrong!");
       }
     );
   }
