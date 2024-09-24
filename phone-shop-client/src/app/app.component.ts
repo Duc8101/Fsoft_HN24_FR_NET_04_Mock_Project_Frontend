@@ -10,14 +10,12 @@ import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ButtonModule, CustomerFooterComponent, CustomerTopbarComponent,ToastModule],
+  imports: [RouterOutlet, ButtonModule, CustomerFooterComponent, CustomerTopbarComponent, ToastModule],
   providers: [MessageService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
   title = 'phone-shop-client';
-  constructor(private messageService: MessageService) {}
-
-  
+  constructor() { }
 }
