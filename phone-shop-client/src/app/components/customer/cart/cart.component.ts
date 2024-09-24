@@ -38,32 +38,7 @@ export class CartComponent implements OnInit {
     private toastService: ToastService
   ) { }
 
-  cartItems: CartItem[] = [
-    {
-      productId: 1,
-      cartId: 1,
-      productName: 'Laptop',
-      image: 'laptop.jpg',
-      price: 1500,
-      quantity: 2
-    },
-    {
-      productId: 2,
-      cartId: 1,
-      productName: 'Phone',
-      image: 'phone.jpg',
-      price: 800,
-      quantity: 1
-    },
-    {
-      productId: 3,
-      cartId: 1,
-      productName: 'Headphones',
-      image: 'headphones.jpg',
-      price: 200,
-      quantity: 3
-    }
-  ];
+  cartItems: CartItem[] = [];
   selectedProducts: CartItem[] = [];
   cols: any[] = [];
   totalPrice: number = 0;
@@ -76,6 +51,7 @@ export class CartComponent implements OnInit {
       { field: 'productName', header: 'Product Name' },
       { field: 'price', header: 'Price' },
     ];
+    this.getCartItems();
   }
 
   getCartItems() {
@@ -139,7 +115,7 @@ export class CartComponent implements OnInit {
           const code = response.code;
           const message = response.message;
           if (code === 200) {
-            this.cartItems = response.data.cartDetailDTOs;
+            this.getCartItems();
             this.username = response.data.customer;
             this.toastService.showSuccess("Delete success!");
           } else {

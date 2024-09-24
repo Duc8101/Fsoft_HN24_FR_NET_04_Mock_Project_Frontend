@@ -20,6 +20,7 @@ import { TagModule } from 'primeng/tag';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { DialogModule } from 'primeng/dialog';
 import { ApiUrls } from '../../services/api/api-url';
+import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'app-all-product',
@@ -56,10 +57,12 @@ export class AllProductComponent implements OnInit {
   totalItem: number = 0;
   pageNum: number = 0;
   first: number = 0;
+  
 
   constructor(
     private readonly apiService: ApiService,
-    private readonly routers: Router
+    private readonly routers: Router,
+    private readonly dataService: DataService,
   ) { }
 
   ngOnInit() {
@@ -80,8 +83,7 @@ export class AllProductComponent implements OnInit {
         const code = response.code;
         const message = response.message;
         if (code === 200) {
-          this.products = response.data.list;
-          this.totalItem = response.data.totalElement;
+          this.dataService.setListCart();
         } else {
           this.error = message;
         }

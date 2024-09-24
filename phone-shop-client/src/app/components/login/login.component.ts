@@ -77,7 +77,6 @@ export class LoginComponent implements OnInit {
           sessionStorage.setItem('token', token);
           localStorage.setItem('token', token);
           this.toastService.showSuccess("Login success!");
-          console.log(sessionStorage.getItem('token'))
           if (roleId == 1) {
             this.router.navigate(['/admin-page']);
           } else {
@@ -96,13 +95,6 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.test = this.dataService.getCartLength();
-  }
-
-  plusNumber() {
-    this.test += 1;
-    this.dataService.setCartLength(this.test);
-    console.log(this.test)
   }
 
 }

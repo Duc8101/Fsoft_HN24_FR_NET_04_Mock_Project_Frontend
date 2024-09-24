@@ -49,7 +49,7 @@ export class CheckoutComponent {
   userInfo: UserInfo = {
     userId: 1,
     username: "user1",
-    fullname : "Nguyen Quoc Duoc",
+    fullName : "Nguyen Quoc Duoc",
     phone : "0966390661",
     email : "duocdeptrai@gmail.com",
     address: "Tu son",
@@ -68,6 +68,7 @@ export class CheckoutComponent {
 
   ngOnInit(): void {
     console.log(this.cartitems);
+    this.getUserInfo();
   }
 
   getUserInfo(){
@@ -79,6 +80,7 @@ export class CheckoutComponent {
           const message = response.message;
           if (code === 200) {
             this.userInfo = response.data;
+            console.log(this.userInfo)
           }
         },
 

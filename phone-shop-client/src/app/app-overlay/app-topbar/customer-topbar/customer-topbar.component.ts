@@ -28,6 +28,7 @@ export class CustomerTopbarComponent implements OnInit {
   constructor(public layoutService: LayoutService, public router: Router,
     public readonly dataService: DataService, private readonly apiService: ApiService) { }
   ngOnInit(): void {
+    this.dataService.setListCart();
     this.items = [
         {
             label: 'Options',

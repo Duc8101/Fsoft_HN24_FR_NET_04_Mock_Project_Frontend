@@ -24,7 +24,7 @@
         <div
             class="flex justify-content-between lg:block border-top-1 lg:border-top-none surface-border py-3 lg:py-0 mt-3 lg:mt-0">
             <i pbadge="" value="2" class="p-element pi pi-shopping-cart mr-4 p-text-secondary p-overlay-badge" style="font-size: 2rem;">
-                <span id="pn_id_266_badge" class="p-badge p-component p-badge-no-gutter">{{this.dataService.getCartLength()}}</span>
+                <span id="pn_id_266_badge" class="p-badge p-component p-badge-no-gutter">{{this.dataService.getListCart().length}}</span>
             </i>
             @if(this.dataService.getLoginStatus()){
                 <p-menu #menu [model]="items" [popup]="true" />
