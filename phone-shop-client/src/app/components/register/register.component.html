@@ -12,19 +12,19 @@
           <form [formGroup]="formRegister" (ngSubmit)="submit()">
             <div class="mb-3">
               <label for="Username" class="block text-900 font-medium mb-2">Username</label>
-              <input id="Username" type="text" pInputText class="w-full" formControlName="username">
+              <input pInputText id="Username" type="text" pInputText class="w-full" formControlName="username">
               <span style="color: red;" *ngIf="(usernameInput.hasError('required') || usernameInput.hasError('whitespace')) && usernameInput.touched">Username is required</span> 
             </div>
       
             <div class="mb-3">
               <label for="Password" class="block text-900 font-medium mb-2">Password</label>
-            <input id="Password" type="password" pInputText class="w-full" formControlName="password">
+            <input pInputText id="Password" type="password" pInputText class="w-full" formControlName="password">
             <span style="color: red;" *ngIf="(passwordInput.hasError('required') || passwordInput.hasError('whitespace')) && passwordInput.touched">Password is required</span>
             </div>
             
             <div class="mb-3">
               <label for="RePassword" class="block text-900 font-medium mb-2">Re-Password</label>
-              <input id="RePassword" type="password" pInputText class="w-full" formControlName="rePassword">
+              <input pInputText id="RePassword" type="password" pInputText class="w-full" formControlName="rePassword">
               @if((rePasswordInput.hasError('required') || rePasswordInput.hasError('whitespace')) && rePasswordInput.touched){
                 <span style="color: red;">Re-Password is required</span>
               }@else if(formRegister.hasError('passwordMismatch') && rePasswordInput.touched) {
@@ -34,13 +34,13 @@
             
             <div class="mb-3">
               <label for="Fullname" class="block text-900 font-medium mb-2">Fullname</label>
-              <input id="Fullname" type="text" pInputText class="w-full" formControlName="fullname">
+              <input pInputText id="Fullname" type="text" pInputText class="w-full" formControlName="fullname">
               <span style="color: red;" *ngIf="(fullnameInput.hasError('required') || fullnameInput.hasError('whitespace')) && fullnameInput.touched">Fullname is required</span>
             </div>
             
             <div class="mb-3">
               <label for="Phone" class="block text-900 font-medium mb-2">Phone</label>
-              <input id="Phone" type="text" pInputText class="w-full" formControlName="phone">
+              <input pInputText id="Phone" type="text" pInputText class="w-full" formControlName="phone">
               @if((phoneInput.hasError('required') || phoneInput.hasError('whitespace')) && phoneInput.touched){
                 <span style="color: red;">Phone is required</span>
               }@else if(phoneInput.hasError('phoneInvalid') && phoneInput.touched) {
@@ -50,7 +50,7 @@
             
             <div class="mb-3">
               <label for="Email" class="block text-900 font-medium mb-2">Email</label>
-              <input id="Email" type="text" pInputText class="w-full" formControlName="email">
+              <input pInputText id="Email" type="text" pInputText class="w-full" formControlName="email">
               @if((emailInput.hasError('required') || emailInput.hasError('whitespace')) && emailInput.touched){
                 <span style="color: red;">Email is required</span>
               }@else if(emailInput.hasError('email')) {
@@ -60,11 +60,11 @@
             
             <div class="mb-3">
               <label for="Address" class="block text-900 font-medium mb-2">Address</label>
-              <input id="Address" type="text" pInputText class="w-full" formControlName="address">
+              <input pInputText id="Address" type="text" pInputText class="w-full" formControlName="address">
               <span style="color: red;" *ngIf="(addressInput.hasError('required') || addressInput.hasError('whitespace')) && addressInput.touched">Address is required</span>
             </div>
             
-            <button type="submit" pButton pRipple label="Register" class="w-full mt-6" [disabled]="formRegister.invalid"></button>
+            <button type="submit" pButton pRipple label="Register" class="w-full mt-6" [disabled]="formRegister.invalid" (onClick)="submit()"></button>
            
           </form>
           <!-- <p style="color: red;">{{error}}</p> -->

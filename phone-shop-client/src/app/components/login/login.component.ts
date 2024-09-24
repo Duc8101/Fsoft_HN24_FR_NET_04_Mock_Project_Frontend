@@ -10,11 +10,12 @@ import { Login } from '../../models/login';
 import { Media } from '../../services/api/media';
 import { ApiUrls } from '../../services/api/api-url';
 import { DataService } from '../../services/data.service';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, CheckboxModule, ButtonModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, CheckboxModule, ButtonModule, InputTextModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
