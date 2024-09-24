@@ -3,7 +3,6 @@ import { CartItem } from '../../../models/cart';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
-import { MessageService } from 'primeng/api';
 import { ApiService } from '../../../services/api/api.services';
 import { UserInfo } from '../../../models/userInformation';
 import { CommonModule } from '@angular/common';
@@ -19,6 +18,7 @@ import { MultiSelectModule } from "primeng/multiselect";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { InputTextModule } from "primeng/inputtext";
 import { Table, TableModule } from 'primeng/table';
+import { ToastService } from '../../../services/toastService';
 
 @Component({
   selector: 'app-checkout',
@@ -41,7 +41,7 @@ import { Table, TableModule } from 'primeng/table';
   ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss',
-  providers: [MessageService]
+  providers: [ToastService]
 })
 export class CheckoutComponent {
   cartitems: CartItem[] = [];
@@ -58,7 +58,7 @@ export class CheckoutComponent {
 
   constructor(private router: Router,
     private readonly apiService: ApiService,
-    private messageService: MessageService
+    private toastService: ToastService
   ) { 
     const navigation = this.router.getCurrentNavigation();
     this.cartitems = navigation?.extras?.state?.['products'] || [];
@@ -83,7 +83,7 @@ export class CheckoutComponent {
         },
 
         (error) => {
-          console.error('Có lỗi xảy ra : ', error);
+          this.toastService.showError("Something went wrong!");
         }
       );
   }
@@ -98,14 +98,14 @@ export class CheckoutComponent {
         const code = response.code;
         const message = response.message;
         if (code === 200) {
-          
+          this.toastService.showSuccess("Check out success!");
         } else {
-          
+          this.toastService.showError(message);
         }
       },
 
       (error) => {
-        console.error('Có lỗi xảy ra : ', error);
+        this.toastService.showError("Something went wrong!");
       }
     );
   }
