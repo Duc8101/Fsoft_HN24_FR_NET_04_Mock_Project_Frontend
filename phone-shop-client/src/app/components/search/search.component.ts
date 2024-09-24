@@ -89,14 +89,39 @@ export class SearchComponent implements OnInit {
     ];
   }
 
+  addToCart(id: string){
+    let body = {
+      productId: id
+    }
+
+    console.log(id)
+    this.apiService
+    .post(ApiUrls.URL_CART_CREATE,body, null)
+    .subscribe(
+      (response) => {
+        const code = response.code;
+        const message = response.message;
+        if (code === 200) {
+          this.dataService.setListCart();
+        } else {
+          this.error = message;
+        }
+      },
+
+      (error) => {
+        console.error('Có lỗi xảy ra : ', error);
+      }
+    );
+  }
+
   getData() {
     let parameters: Map<string, any> = new Map();
     parameters.set("name", this.dataService.getSearchName());
     parameters.set("pageSize", 10);
     parameters.set("currentPage", 1);
-
+  
     this.apiService
-      .get(ApiUrls.URL_GET_ALL_PRODUCTS, parameters)
+      .post(ApiUrls.URL_GET_ALL_PRODUCTS,[], parameters)
       .subscribe(
         (response) => {
           const code = response.code;

@@ -35,11 +35,18 @@ export class CustomerTopbarComponent implements OnInit {
             items: [
                 {
                     label: 'User-Profile',
-                    icon: 'pi pi-user-edit'
+                    icon: 'pi pi-user-edit',
+                    command: () => {
+                      this.router.navigate(['/user-profile']);
+                    }
                 },
                 {
                     label: 'Management Order',
-                    icon: 'pi pi-cart-arrow-down'
+                    icon: 'pi pi-cart-arrow-down',
+                    command: () => {
+                      this.router.navigate(['/customer-orders-management']);
+
+                    }
                 },
                 {
                     label: 'Logout',
@@ -57,6 +64,10 @@ export class CustomerTopbarComponent implements OnInit {
     this.dataService.setSearchName(this.searchName);
     this.dataService.triggerFunctionCall();
     this.router.navigate(['/search']);
+  }
+
+  getRoleUser(){
+    return sessionStorage.getItem("roleName");
   }
 
   logout(){

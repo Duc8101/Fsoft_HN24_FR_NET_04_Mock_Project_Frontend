@@ -76,6 +76,8 @@ export class AllProductComponent implements OnInit {
     let body = {
       productId: id
     }
+
+    console.log(id)
     this.apiService
     .post(ApiUrls.URL_CART_CREATE,body, null)
     .subscribe(
