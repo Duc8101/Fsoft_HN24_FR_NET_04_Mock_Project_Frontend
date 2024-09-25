@@ -1,5 +1,4 @@
 <div class="grid">
-    <p-toast />
     <div class="col-12">
         <div class="card px-6 py-6">
             <p-table #dt [value]="products" [columns]="cols" responsiveLayout="scroll" [rows]="10"
@@ -184,18 +183,22 @@
         <p-table [value]="feedbacks" [paginator]="true" [rows]="5" responsiveLayout="scroll">
             <ng-template pTemplate="header">
                 <tr>
+                    <th>CreateDate</th>
                     <th>Full Name</th>
                     <th>Feedback</th>
+                    <th>Rate</th>
                     <th>Action</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-feedback>
                 <tr>
-                    <td>{{feedback.fullName}}</td>
+                    <td>{{feedback.createdAt}}</td>
+                    <td>{{feedback.creatorName}}</td>
                     <td>{{feedback.comment}}</td>
+                    <td>{{feedback.rate}}</td>
                     <td>
                         <button pButton label="Reply" icon="pi pi-reply" class="p-button-sm p-button-info"
-                            (click)="openReplyModal(feedback)"></button>
+                            (click)="replyToFeedback(feedback)"></button>
                     </td>
                 </tr>
             </ng-template>
@@ -204,6 +207,22 @@
 </p-dialog>
 <p-dialog header="Reply to Feedback" [(visible)]="displayReplyModal" [modal]="true" [style]="{width: '40vw'}" [closable]="true">
     <div class="p-fluid">
+        <p-table [value]="replyList" [paginator]="true" [rows]="5" responsiveLayout="scroll">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>CreateDate</th>
+                    <th>Full Name</th>
+                    <th>Feedback</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-feedback>
+                <tr>
+                    <td>{{feedback.createdAt}}</td>
+                    <td>{{feedback.creatorName}}</td>
+                    <td>{{feedback.comment}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
         <div class="field">
             <label for="replyComment">Your Reply:</label>
             <textarea id="replyComment" pInputTextarea [(ngModel)]="replyContent" rows="5" cols="30" placeholder="Write your reply..."></textarea>
@@ -213,6 +232,6 @@
     <!-- Nút để submit phản hồi -->
     <p-footer>
         <button pButton label="Submit" icon="pi pi-check" class="p-button-success" (click)="submitReply()"></button>
-        <button pButton label="Cancel" icon="pi pi-times" class="p-button-secondary" (click)="displayReplyModal = false"></button>
+        <button pButton label="Cancel" icon="pi pi-times" class="p-button-secondary" (click)="cancelReply()"></button>
     </p-footer>
 </p-dialog>

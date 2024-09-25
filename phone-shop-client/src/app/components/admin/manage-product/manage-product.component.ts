@@ -23,6 +23,7 @@ import { ToastModule } from 'primeng/toast';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ToastService } from '../../../services/toastService';
 
 @Component({
   selector: 'app-manage-product',
@@ -46,7 +47,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     DialogModule,
     ReactiveFormsModule
   ],
-  providers: [MessageService],
+  providers: [ToastService],
   templateUrl: './manage-product.component.html',
   styleUrl: './manage-product.component.scss'
 })
@@ -99,7 +100,7 @@ export class ManageProductComponent implements OnInit {
 
   form: FormGroup;
 
-  constructor(private readonly apiService: ApiService, private messageService: MessageService) {
+  constructor(private readonly apiService: ApiService, private toastService: ToastService) {
     this.form = new FormGroup({
       quantity: new FormControl('', [Validators.required]),
       productName: new FormControl('', [Validators.required]),
@@ -182,11 +183,11 @@ export class ManageProductComponent implements OnInit {
   }
 
   showSuccess(action: string) {
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: action + ' Successful' });
+    this.toastService.showSuccess(action + 'Success!');
   }
 
   showError(action: string) {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: action + ' Failed' });
+    this.toastService.showError(action + ' Failed!');
   }
 
   // saveProduct() {
@@ -259,7 +260,7 @@ export class ManageProductComponent implements OnInit {
           const message = response.message;
           if (code === 200) {
             this.categories = response.data;
-            console.log(this.categories)
+
           } else {
             this.error = message;
           }
@@ -307,7 +308,6 @@ export class ManageProductComponent implements OnInit {
 
   updateProduct() {
     this.submitted = true;
-    console.log(this.product)
     this.apiService
       .put(ApiUrls.URL_UPDATE_PRODUCT + "/" + this.product.productId, this.product)
       .subscribe(
@@ -349,7 +349,6 @@ export class ManageProductComponent implements OnInit {
         (response) => {
           const code = response.code;
           const message = response.message;
-          console.log(message);
           if (code === 200) {
             this.getListProduct();
             this.showSuccess("Delete Product");
@@ -375,11 +374,14 @@ export class ManageProductComponent implements OnInit {
   displayFeedbackList: boolean = false;
   feedbacks: any[] = [];
   replyContent: string = '';
+  replyList: any[] = [];
   selectedFeedback: any;
   displayReplyModal: boolean = false;
+  currentProduct: number = 0;
 
-  getFeedBack(productId: number){
+  getFeedBack(productId: number) {
     let parameters: Map<string, any> = new Map();
+    this.currentProduct = productId;
     parameters.set("productId", productId);
 
     this.apiService
@@ -404,20 +406,48 @@ export class ManageProductComponent implements OnInit {
 
   // Hàm xử lý khi nhấn nút Reply
   replyToFeedback(feedback: any) {
-    console.log('Reply to:', feedback);
-    // Xử lý logic trả lời phản hồi tại đây
-    // Có thể mở một modal khác hoặc điều hướng tới form reply
+    this.replyList = feedback.feedBackReplies;
+    this.openReplyModal(feedback);
   }
 
-    // Hàm mở modal reply khi nhấn vào Reply
-    openReplyModal(feedback: any) {
-      this.selectedFeedback = feedback;  // Lưu feedback được chọn
-      this.displayReplyModal = true;     // Mở modal reply
+  // Hàm mở modal reply khi nhấn vào Reply
+  openReplyModal(feedback: any) {
+    this.selectedFeedback = feedback;  // Lưu feedback được chọn
+    this.displayReplyModal = true;     // Mở modal reply
+  }
+
+  // Hàm gửi phản hồi
+  submitReply() {
+    let body = {
+      repliedFeedbackId: this.selectedFeedback.feedbackId,
+      comment: this.replyContent,
     }
-  
-    // Hàm gửi phản hồi
-    submitReply() {
+
+    this.apiService
+      .post('http://localhost:5125/Feedback/reply-feedback', body, null)
+      .subscribe(
+        (response) => {
+          const code = response.code;
+          const message = response.message;
+          if (code === 200) {
+            this.toastService.showSuccess(message);
+            this.getFeedBack(this.currentProduct);
+          } else {
+            this.toastService.showError(message);
+          }
+        },
+
+        (error) => {
+          this.toastService.showError("Something went wrong!");
+        }
+      );
+
       this.displayReplyModal = false;
-      this.replyContent = '';
-    }
+    this.replyContent = '';
+  }
+
+  cancelReply() {
+    this.displayReplyModal = false;
+    this.replyContent = '';
+  }
 }
