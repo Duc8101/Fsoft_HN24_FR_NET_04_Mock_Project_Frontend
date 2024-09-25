@@ -45,7 +45,7 @@
                     <p class="feedback-comment">{{ feedback.comment }}</p>
                 </div>
                 <div class="p-col">
-                    <a (click)="openReplyModal(feedback)" [hidden]="feedback.feedBackReplies === 0">View replies</a>
+                    <a (click)="openReplyModal(feedback)" [hidden]="feedback.feedBackReplies.length === 0">View replies</a>
                 </div>
             </div>
             <p-divider></p-divider>

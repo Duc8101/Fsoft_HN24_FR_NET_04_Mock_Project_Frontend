@@ -17,16 +17,19 @@
                         class="p-element p-ripple p-button-info p-button-text p-button p-component">
                         <span class="p-button-label"><a href="">Home</a></span>
                     </button>
-                    <button pbutton="" pripple="" type="button" label="Info"
+                    @if(getRoleUser() != "Admin"){
+                        <button pbutton="" pripple="" type="button" label="Info"
                         class="p-element p-ripple p-button-info p-button-text p-button p-component">
-                        <span class="p-button-label"><a href="">All Product</a></span>
+                        <span class="p-button-label"><a href="/all-product">All Product</a></span>
                     </button>
+                    }
+                    
                 </div>
 
                 <div class="flex align-items-center justify-content-center mx-4">
                     @if(getRoleUser() != "Admin"){
                     <input [(ngModel)]="this.searchName" type="text" pinputtext="" placeholder="Search"
-                        class="p-inputtext p-component p-element w-21rem">
+                        class="p-inputtext p-component p-element w-21rem" (keydown.enter)="searchProduct()">
                     <button (click)="searchProduct()" pbutton="" type="button" icon="pi pi-search"
                         class="p-element p-ripple p-button-info p-button p-component p-button-icon-only">
                         <span class="p-button-icon pi pi-search" aria-hidden="true"></span>
@@ -41,7 +44,7 @@
 
                 @if(this.getLoginStatus()){
                 @if(getRoleUser() != "Admin"){
-                <i pbadge="" value="2" class="p-element pi pi-shopping-cart mr-4 p-text-secondary p-overlay-badge"
+                <i (click)="goCart()" pbadge="" value="2" class="p-element pi pi-shopping-cart mr-4 p-text-secondary p-overlay-badge"
                     style="font-size: 2rem;">
                     <span id="pn_id_266_badge"
                         class="p-badge p-component p-badge-no-gutter">{{this.dataService.getListCart().length}}</span>

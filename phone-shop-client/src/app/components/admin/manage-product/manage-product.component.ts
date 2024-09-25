@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Table } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -24,6 +24,12 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastService } from '../../../services/toastService';
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireStorage, AngularFireStorageModule } from '@angular/fire/compat/storage';
+import { from, Observable, switchMap } from 'rxjs';
+
 
 @Component({
   selector: 'app-manage-product',
@@ -45,13 +51,15 @@ import { ToastService } from '../../../services/toastService';
     InputNumberModule,
     PaginatorModule,
     DialogModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AngularFireStorageModule
   ],
   providers: [ToastService],
   templateUrl: './manage-product.component.html',
   styleUrl: './manage-product.component.scss'
 })
 export class ManageProductComponent implements OnInit {
+  private storage = inject(AngularFireStorage);
   error = '';
 
   statusButton = 'Add';
@@ -100,7 +108,8 @@ export class ManageProductComponent implements OnInit {
 
   form: FormGroup;
 
-  constructor(private readonly apiService: ApiService, private toastService: ToastService) {
+  constructor(private readonly apiService: ApiService, private toastService: ToastService,
+  ) {
     this.form = new FormGroup({
       quantity: new FormControl('', [Validators.required]),
       productName: new FormControl('', [Validators.required]),
@@ -442,12 +451,39 @@ export class ManageProductComponent implements OnInit {
         }
       );
 
-      this.displayReplyModal = false;
+    this.displayReplyModal = false;
     this.replyContent = '';
   }
 
   cancelReply() {
     this.displayReplyModal = false;
     this.replyContent = '';
+  }
+
+  uploadFile(file: File): Observable<string> {
+    const filePath = `uploads/${new Date().getTime()}_${file.name}`;
+    const fileRef = this.storage.ref(filePath);
+    const task = this.storage.upload(filePath, file);
+
+    return from(task).pipe(
+      switchMap(() => fileRef.getDownloadURL())
+    );
+  }
+
+  downloadURL: string | null = null;
+
+  onFileSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      this.uploadFile(file).subscribe({
+        next: (url) => {
+          this.downloadURL = url;
+          console.log('File available at', url);
+        },
+        error: (error) => {
+          console.error('Upload failed', error);
+        }
+      });
+    }
   }
 }

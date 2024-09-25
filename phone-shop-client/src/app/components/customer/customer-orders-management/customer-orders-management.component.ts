@@ -123,6 +123,7 @@ export class CustomerOrdersManagementComponent implements OnInit {
           const message = response.message;
           if (code === 200) {
             this.orderDetail = response.data;
+            console.log(this.orderDetail);
             this.totalPrice = this.orderDetail.reduce((sum, product) => sum + (product.price * product.quantity), 0);
           } else {
           }

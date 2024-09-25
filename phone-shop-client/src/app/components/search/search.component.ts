@@ -15,6 +15,7 @@ import { DataService } from '../../services/data.service';
 import { ApiUrls } from '../../services/api/api-url';
 import { TagModule } from 'primeng/tag';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
+import { ToastService } from '../../services/toastService';
 
 
 @Component({
@@ -32,6 +33,7 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
   ],
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss',
+  providers: [ToastService]
 })
 
 export class SearchComponent implements OnInit {
@@ -47,7 +49,7 @@ export class SearchComponent implements OnInit {
     private readonly apiService: ApiService,
     private readonly routers: Router,
     private readonly dataService: DataService,
-
+private toastService: ToastService
   ) { }
 
   ngOnInit() {
@@ -71,6 +73,7 @@ export class SearchComponent implements OnInit {
         const message = response.message;
         if (code === 200) {
           this.dataService.setListCart();
+          this.toastService.showSuccess("Add to cart success!")
         } else {
           this.error = message;
         }
@@ -119,5 +122,9 @@ export class SearchComponent implements OnInit {
       this.first = (this.pageNum) * 9;
     }
     this.getData();
+  }
+
+  goProductDetail(productId: number){
+    this.routers.navigate(['/product-detail/', productId]);
   }
 }

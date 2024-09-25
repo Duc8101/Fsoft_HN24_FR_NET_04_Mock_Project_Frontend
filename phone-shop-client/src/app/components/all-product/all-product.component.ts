@@ -43,7 +43,7 @@ import { ToastService } from '../../services/toastService';
   ],
   templateUrl: './all-product.component.html',
   styleUrl: './all-product.component.scss',
-  providers:[ToastService]
+  providers: [ToastService]
 })
 export class AllProductComponent implements OnInit {
   error = '';
@@ -59,44 +59,49 @@ export class AllProductComponent implements OnInit {
   totalItem: number = 0;
   pageNum: number = 0;
   first: number = 0;
-  
+
 
   constructor(
     private readonly apiService: ApiService,
     private readonly routers: Router,
     private readonly dataService: DataService,
     private toastService: ToastService
-  ) { }
+  ) {
+    const navigation = this.routers.getCurrentNavigation();
+    if (navigation?.extras?.state?.['categoryId']) {
+      this.selectedCategories.push(navigation?.extras?.state?.['categoryId'] || Number);
+    }
+  }
 
   ngOnInit() {
     this.getData();
     this.getCategories();
   }
 
-  addToCart(id: string){
+  addToCart(id: string) {
     let body = {
       productId: id
     }
 
     console.log(id)
     this.apiService
-    .post(ApiUrls.URL_CART_CREATE,body, null)
-    .subscribe(
-      (response) => {
-        const code = response.code;
-        const message = response.message;
-        if (code === 200) {
-          this.dataService.setListCart();
-          this.toastService.showSuccess("Add to cart success!");
-        } else {
-          this.toastService.showError(message);
-        }
-      },
+      .post(ApiUrls.URL_CART_CREATE, body, null)
+      .subscribe(
+        (response) => {
+          const code = response.code;
+          const message = response.message;
+          if (code === 200) {
+            this.dataService.setListCart();
+            this.toastService.showSuccess("Add to cart success!");
+          } else {
+            this.toastService.showError(message);
+          }
+        },
 
-      (error) => {
-        this.toastService.showError("Something went wrong!");
-      }
-    );
+        (error) => {
+          this.toastService.showError("Something went wrong!");
+        }
+      );
   }
 
   getData() {
@@ -166,8 +171,12 @@ export class AllProductComponent implements OnInit {
 
   visible: boolean = false;
 
-    showDialog() {
-        this.visible = true;
-    }
+  showDialog() {
+    this.visible = true;
+  }
+
+  goProductDetail(productId: number){
+    this.routers.navigate(['/product-detail/', productId]);
+  }
 }
 

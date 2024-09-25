@@ -16,13 +16,14 @@ import { CartComponent } from './components/customer/cart/cart.component';
 import { CheckoutComponent } from './components/customer/checkout/checkout.component';
 import { CustomerOrdersManagementComponent } from './components/customer/customer-orders-management/customer-orders-management.component';
 import { SellerOrdersManagementComponent } from './components/admin/seller-orders-management/seller-orders-management.component';
+import { HomepageComponent } from './components/homepage/homepage.component';
 
 export const routes : Routes = [
   {path : 'login', component : LoginComponent,canActivate: [GuestGuard]},
   {path : 'register', component : RegisterComponent,canActivate: [GuestGuard]},
   {path : 'forgot-password', component : ForgotPasswordComponent,canActivate: [GuestGuard]},
   {path : 'search', component : SearchComponent,canActivate: [CustomerGuestGuard]},
-  {path : '', component : SearchComponent,canActivate: [CustomerGuestGuard]},
+  {path : '', component : HomepageComponent,canActivate: [CustomerGuestGuard]},
   {path : 'all-product', component : AllProductComponent,canActivate: [CustomerGuestGuard]},
   {path : 'product-detail/:id', component : ProductDetailComponent,canActivate: [CustomerGuestGuard]},
   {path : 'admin-page', component : AdminPageComponent,canActivate: [AdminGuard]},
@@ -31,4 +32,5 @@ export const routes : Routes = [
   {path : 'checkout', component : CheckoutComponent,canActivate: [CustomerGuard]},
   {path : 'customer-orders-management', component : CustomerOrdersManagementComponent,canActivate: [CustomerGuard]}, 
   {path : 'seller-orders-management', component : SellerOrdersManagementComponent}, 
+  {path : 'homepage', component : HomepageComponent,canActivate: [CustomerGuestGuard]},
 ];

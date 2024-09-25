@@ -74,7 +74,7 @@
                 <td style="width:200px">{{item.quantity}}</td>
                 <td style="width:200px">{{item.price * item.quantity}}$</td>
                 <td style="width:200px">
-                    <button [disabled]="item.isFeedBack" pButton type="button" label="Leave Feedback" icon="pi pi-comments" (click)="showFeedback(item.orderDetailId)"></button>
+                    <button [disabled]="!item.isFeedBack" pButton type="button" label="Leave Feedback" icon="pi pi-comments" (click)="showFeedback(item.orderDetailId)"></button>
                 </td>
             </tr>
         </ng-template>

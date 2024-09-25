@@ -136,4 +136,8 @@ export class CartComponent implements OnInit {
   selectChange(){
     this.totalPrice = this.selectedProducts.reduce((sum, product) => sum + (product.price * product.quantity), 0);
   }
+
+  goProductDetail(productId: number){
+    this.routers.navigate(['/product-detail/', productId]);
+  }
 }
