@@ -19,6 +19,8 @@ import { OrderDto } from '../../../models/orderDto';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { DialogModule } from 'primeng/dialog';
+import { ToastService } from '../../../services/toastService';
+import { OrderDetail } from '../../../models/orderDetail';
 
 @Component({
   selector: 'app-seller-orders-management',
@@ -41,100 +43,37 @@ import { DialogModule } from 'primeng/dialog';
   ],
   templateUrl: './seller-orders-management.component.html',
   styleUrl: './seller-orders-management.component.scss',
-  providers: [ConfirmationService, MessageService]
+  providers: [ConfirmationService, ToastService]
 })
 export class SellerOrdersManagementComponent implements OnInit {
 
   constructor(private apiService: ApiService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private toastService: ToastService
   ) {
 
   }
 
   tabs: string[] = [
+    "All",
     "Pending",
     "Rejected",
     "Approved",
     "Done",
-    "Ship Fail"
-  ];
-  orderList: OrderDto[] = [
-    {
-      orderId: 1,
-      customerId: 101,
-      username: "johndoe",
-      status: "Pending",
-      address: "123 Main St, City A",
-      note: "Deliver before noon",
-      orderDate: "2024-09-23",
-    },
-    {
-      orderId: 2,
-      customerId: 102,
-      username: "janedoe",
-      status: "Rejected",
-      address: "456 Elm St, City B",
-      note: "Leave at the back door",
-      orderDate: "2024-09-22",
-    },
-    {
-      orderId: 3,
-      customerId: 103,
-      username: "mikesmith",
-      status: "Approved",
-      address: "789 Oak St, City C",
-      note: "Call before delivery",
-      orderDate: "2024-09-21",
-    },
-    {
-      orderId: 4,
-      customerId: 104,
-      username: "anndoe",
-      status: "Done",
-      address: "101 Pine St, City D",
-      note: "Please hurry",
-      orderDate: "2024-09-20",
-    },
-    {
-      orderId: 5,
-      customerId: 105,
-      username: "tomjohnson",
-      status: "Ship Fail",
-      address: "555 Birch St, City E",
-      note: "Reschedule delivery",
-      orderDate: "2024-09-19",
-    }
+    "Ship Failed"
   ];
 
-  cartItems: CartItem[] = [
-    {
-      productId: 1,
-      cartId: 1,
-      productName: 'Laptop',
-      image: 'laptop.jpg',
-      price: 1500,
-      quantity: 2
-    },
-    {
-      productId: 2,
-      cartId: 1,
-      productName: 'Phone',
-      image: 'phone.jpg',
-      price: 800,
-      quantity: 1
-    },
-    {
-      productId: 3,
-      cartId: 1,
-      productName: 'Headphones',
-      image: 'headphones.jpg',
-      price: 200,
-      quantity: 3
-    }
+  statusEnum: string[] = [
+    "Pending",
+    "Rejected",
+    "Approved",
+    "Done",
+    "Ship Failed"
   ];
+  orderList: OrderDto[] = [];
+  orderDetail: OrderDetail[] = [];
 
-  selectStatus?: string;
+  selectStatus?: string = "";
   totalItem: number = 0;
   pageNum: number = 0;
   first: number = 0;
@@ -142,9 +81,14 @@ export class SellerOrdersManagementComponent implements OnInit {
   totalPrice: number = 0;
   visible: boolean = false;
   currentOrderId: number = 0;
+  displayConfirmation: boolean = false;
+  selectedOrder: any;
+  pendingStatusChange: string = "";
+  previousStatus: string = "";
+  note: string = '';
 
   ngOnInit() {
-
+    this.getOrders();
   }
 
   getOrders() {
@@ -176,27 +120,46 @@ export class SellerOrdersManagementComponent implements OnInit {
   getOrderDetail(orderId: number) {
     // get order detail;
     this.currentOrderId = orderId;
-    this.totalPrice = this.cartItems.reduce((sum, product) => sum + (product.price * product.quantity), 0);
+    this.apiService
+      .get('http://localhost:5125/Order/Detail/' + orderId, null)
+      .subscribe(
+        (response) => {
+          const code = response.code;
+          const message = response.message;
+          if (code === 200) {
+            this.orderDetail = response.data;
+            this.totalPrice = this.orderDetail.reduce((sum, product) => sum + (product.price * product.quantity), 0);
+          } else {
+          }
+        },
+
+        (error) => {
+          console.error('Có lỗi xảy ra : ', error);
+        }
+      );
+
     this.showDialog();
   }
 
   onTabChange() {
-    console.log(this.activeIndex);
     switch (this.activeIndex) {
       case 0:
-        this.selectStatus = "Pending";
+        this.selectStatus = "";
         break;
       case 1:
-        this.selectStatus = "Rejected";
+        this.selectStatus = "Pending";
         break;
       case 2:
-        this.selectStatus = "Approved";
+        this.selectStatus = "Rejected";
         break;
       case 3:
-        this.selectStatus = "Done";
+        this.selectStatus = "Approved";
         break;
       case 4:
-        this.selectStatus = "Ship_Fail";
+        this.selectStatus = "Done";
+        break;
+      case 5:
+        this.selectStatus = "Ship Failed";
         break;
       default:
         this.selectStatus = "All";
@@ -219,23 +182,77 @@ export class SellerOrdersManagementComponent implements OnInit {
     // delete order.
   }
 
-  confirm2(event: Event) {
-    this.confirmationService.confirm({
-      target: event.target as EventTarget,
-      message: 'Do you want to delete this order?',
-      icon: 'pi pi-info-circle',
-      acceptButtonStyleClass: 'p-button-danger p-button-sm',
-      accept: () => {
-        this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'Order deleted', life: 3000 });
-      },
-      reject: () => {
-        this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
-      }
-    });
-  }
 
   showDialog() {
     this.visible = true;
+  }
+
+  onStatusChange(newStatus: any, order: any) {
+    this.previousStatus = order.status;
+    this.pendingStatusChange = newStatus.value;
+    this.selectedOrder = order;
+    this.displayConfirmation = true;
+  }
+
+
+  confirmChange() {
+    this.selectedOrder.status = this.pendingStatusChange;
+    console.log(this.pendingStatusChange);
+    let status = 0;
+    switch (this.pendingStatusChange) {
+      case "Pending":
+        status = 0;
+        break;
+      case "Rejected":
+        status = 1;
+        break;
+      case "Approved":
+        status = 2;
+        break;
+      case "Done":
+        status = 3;
+        break;
+      case "Ship Failed":
+        status = 4;
+        break;
+    }
+
+    let body = {
+      status: status,
+      note: this.note,
+    }
+
+    this.apiService
+      .put('http://localhost:5125/Order/Update/' + this.selectedOrder.orderId, body)
+      .subscribe(
+        (response) => {
+          const code = response.code;
+          const message = response.message;
+          if (code === 200) {
+            this.toastService.showSuccess(message);
+            this.getOrders();
+          } else {
+            this.toastService.showError(message);
+            this.getOrders();
+          }
+        },
+
+        (error) => {
+          this.toastService.showError("Something went wrong!");
+          this.getOrders();
+        }
+      );
+
+    this.displayConfirmation = false;
+    this.note = '';
+    this.selectedOrder = null;
+  }
+
+  // Khi người dùng từ chối thay đổi
+  rejectChange() {
+    this.displayConfirmation = false;  // Đóng dialog
+    this.note = '';
+    this.selectedOrder = null;
   }
 }
 

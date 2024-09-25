@@ -7,5 +7,5 @@ export interface UserInfo {
     phone : string,
     email : string,
     address: string,
-    cartItems : CartItem[]
+    cartDetailDTOs : CartItem[]
  }

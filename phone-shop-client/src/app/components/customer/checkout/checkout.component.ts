@@ -53,7 +53,7 @@ export class CheckoutComponent {
     phone : "0966390661",
     email : "duocdeptrai@gmail.com",
     address: "Tu son",
-    cartItems: [],
+    cartDetailDTOs: [],
   };
 
   constructor(private router: Router,
@@ -62,7 +62,7 @@ export class CheckoutComponent {
   ) { 
     const navigation = this.router.getCurrentNavigation();
     this.cartitems = navigation?.extras?.state?.['products'] || [];
-    this.userInfo.cartItems = this.cartitems;
+    this.userInfo.cartDetailDTOs = this.cartitems;
     this.totalPrice = this.cartitems.reduce((sum, product) => sum + (product.price * product.quantity), 0);
   }
 
@@ -80,7 +80,7 @@ export class CheckoutComponent {
           const message = response.message;
           if (code === 200) {
             this.userInfo = response.data;
-            console.log(this.userInfo)
+            this.userInfo.cartDetailDTOs = this.cartitems;
           }
         },
 
@@ -101,6 +101,7 @@ export class CheckoutComponent {
         const message = response.message;
         if (code === 200) {
           this.toastService.showSuccess("Check out success!");
+          this.router.navigate(['/customer-orders-management']);
         } else {
           this.toastService.showError(message);
         }

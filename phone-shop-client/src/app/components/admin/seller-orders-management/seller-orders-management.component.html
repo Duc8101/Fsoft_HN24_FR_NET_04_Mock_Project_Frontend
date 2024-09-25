@@ -1,5 +1,5 @@
-<div class="card mx-8 mb-8">
-    <h1>Seller Orders Management</h1>
+<div class="card mb-8 mr-0">
+    <h3>Seller Orders Management</h3>
     <p-tabView (onChange)="onTabChange()" [(activeIndex)]="activeIndex">
         <p-tabPanel *ngFor="let tab of tabs" [header]="tab">
         </p-tabPanel>
@@ -11,25 +11,26 @@
                 <th>Status</th>
                 <th>Address</th>
                 <th>Note</th>
-                <th pSortableColumn="orderDate">Order Date <p-sortIcon field="orderDate"></p-sortIcon></th>
+                <th>Order Date </th>
                 <th>Action</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-order>
             <tr>
-                <td style="width:20%; min-width:10rem;">
+                <td style="width:5%; min-width:7rem;">
                     <span class="p-column-title">Order Id</span>
                     {{order.orderId}}
                 </td>
-                <td style="width:20%; min-width:10rem;">
+                <td style="width:10%; min-width:7rem;">
                     <span class="p-column-title">Status</span>
-                    <p-dropdown [options]="tabs" [(ngModel)]="order.status" placeholder="Status"/>
+                    <p-dropdown [options]="statusEnum" [ngModel]="order.status" placeholder="Status" appendTo="body"
+                        (onChange)="onStatusChange($event, order)"></p-dropdown>
                 </td>
-                <td style="width:20%; min-width:8rem;">
+                <td style="width:30%; min-width:8rem;">
                     <span class="p-column-title">Address</span>
                     {{order.address}}
                 </td>
-                <td style="width:20%; min-width:10rem;">
+                <td style="width:35%; min-width:10rem;">
                     <span class="p-column-title">Note</span>
                     {{order.note}}
                 </td>
@@ -39,8 +40,6 @@
                 </td>
                 <td>
                     <div class="flex">
-                        <button *ngIf="order.status === 'Pending'" pButton pRipple icon="pi pi-trash"
-                            class="p-button-rounded p-button-warning mr-2" (click)="confirm2($event)"></button>
                         <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success"
                             (click)="getOrderDetail(order.orderId)"></button>
                     </div>
@@ -51,11 +50,10 @@
     <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="9" [totalRecords]="totalItem" />
 </div>
 <p-confirmPopup />
-<p-toast />
 <p-dialog header="Order Id: {{currentOrderId}}" [(visible)]="visible" [modal]="true"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '50vw' }" [draggable]="false"
     [resizable]="false">
-    <p-table [value]="cartItems" scrollDirection="both" [scrollable]="true" scrollHeight="400px" styleClass="mt-3"
+    <p-table [value]="orderDetail" scrollDirection="both" [scrollable]="true" scrollHeight="400px" styleClass="mt-3"
         responsiveLayout="scroll">
         <ng-template pTemplate="header">
             <tr>
@@ -84,4 +82,20 @@
     <div class="mt-2 text-right">
         <h5 class="mt-5">Total orders price: {{totalPrice}}$</h5>
     </div>
+</p-dialog>
+<!-- Dialog for confirmation -->
+<p-dialog header="Confirm Status Change" [(visible)]="displayConfirmation" [modal]="true" [closable]="false"
+    [style]="{width: '350px'}">
+    <p>Are you sure you want to change the status of this order?</p>
+
+    <!-- Container with PrimeFlex to center the textarea -->
+    <div class="flex justify-content-center">
+        <textarea rows="5" cols="50" pInputTextarea [(ngModel)]="note"></textarea>
+    </div>
+
+    <p-footer>
+        <button type="button" pButton label="Yes" icon="pi pi-check" (click)="confirmChange()"></button>
+        <button type="button" pButton label="No" icon="pi pi-times" class="p-button-secondary"
+            (click)="rejectChange()"></button>
+    </p-footer>
 </p-dialog>
