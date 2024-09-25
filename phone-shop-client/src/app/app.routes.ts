@@ -22,6 +22,7 @@ export const routes : Routes = [
   {path : 'register', component : RegisterComponent,canActivate: [GuestGuard]},
   {path : 'forgot-password', component : ForgotPasswordComponent,canActivate: [GuestGuard]},
   {path : 'search', component : SearchComponent,canActivate: [CustomerGuestGuard]},
+  {path : '', component : SearchComponent,canActivate: [CustomerGuestGuard]},
   {path : 'all-product', component : AllProductComponent,canActivate: [CustomerGuestGuard]},
   {path : 'product-detail/:id', component : ProductDetailComponent,canActivate: [CustomerGuestGuard]},
   {path : 'admin-page', component : AdminPageComponent,canActivate: [AdminGuard]},
