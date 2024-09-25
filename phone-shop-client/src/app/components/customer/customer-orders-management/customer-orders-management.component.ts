@@ -20,6 +20,7 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { DialogModule } from 'primeng/dialog';
 import { ToastService } from '../../../services/toastService';
+import { OrderDetail } from '../../../models/orderDetail';
 
 @Component({
   selector: 'app-customer-orders-management',
@@ -54,82 +55,11 @@ export class CustomerOrdersManagementComponent implements OnInit {
   }
 
   tabs: string[] = [];
-  orderList: OrderDto[] = [
-    {
-      orderId: 1,
-      customerId: 101,
-      username: "johndoe",
-      status: "Pending",
-      address: "123 Main St, City A",
-      note: "Deliver before noon",
-      orderDate: "2024-09-23",
-    },
-    {
-      orderId: 2,
-      customerId: 102,
-      username: "janedoe",
-      status: "Rejected",
-      address: "456 Elm St, City B",
-      note: "Leave at the back door",
-      orderDate: "2024-09-22",
-    },
-    {
-      orderId: 3,
-      customerId: 103,
-      username: "mikesmith",
-      status: "Approved",
-      address: "789 Oak St, City C",
-      note: "Call before delivery",
-      orderDate: "2024-09-21",
-    },
-    {
-      orderId: 4,
-      customerId: 104,
-      username: "anndoe",
-      status: "Done",
-      address: "101 Pine St, City D",
-      note: "Please hurry",
-      orderDate: "2024-09-20",
-    },
-    {
-      orderId: 5,
-      customerId: 105,
-      username: "tomjohnson",
-      status: "Ship Fail",
-      address: "555 Birch St, City E",
-      note: "Reschedule delivery",
-      orderDate: "2024-09-19",
-    }
-  ];
+  orderList: OrderDto[] = [];
 
-  cartItems: CartItem[] = [
-    {
-      productId: 1,
-      cartId: 1,
-      productName: 'Laptop',
-      image: 'laptop.jpg',
-      price: 1500,
-      quantity: 2
-    },
-    {
-      productId: 2,
-      cartId: 1,
-      productName: 'Phone',
-      image: 'phone.jpg',
-      price: 800,
-      quantity: 1
-    },
-    {
-      productId: 3,
-      cartId: 1,
-      productName: 'Headphones',
-      image: 'headphones.jpg',
-      price: 200,
-      quantity: 3
-    }
-  ];
+  orderDetail: OrderDetail[] = [];
 
-  selectStatus?: string;
+  selectStatus?: string = "";
   totalItem: number = 0;
   pageNum: number = 0;
   first: number = 0;
@@ -147,6 +77,8 @@ export class CustomerOrdersManagementComponent implements OnInit {
       "Done",
       "Ship Fail"
     ];
+
+    this.getOrders();
   }
 
   getOrders() {
@@ -165,6 +97,7 @@ export class CustomerOrdersManagementComponent implements OnInit {
           if (code === 200) {
             this.orderList = response.data.list;
             this.totalItem = response.data.totalElement;
+            console.log(response.data.list);
           } else {
           }
         },
@@ -178,7 +111,24 @@ export class CustomerOrdersManagementComponent implements OnInit {
   getOrderDetail(orderId : number){
     // get order detail;
     this.currentOrderId = orderId;
-    this.totalPrice = this.cartItems.reduce((sum, product) => sum + (product.price * product.quantity), 0);
+    this.apiService
+      .get('http://localhost:5125/Order/Detail/' + orderId, null)
+      .subscribe(
+        (response) => {
+          const code = response.code;
+          const message = response.message;
+          if (code === 200) {
+            this.orderDetail = response.data;
+            this.totalPrice = this.orderDetail.reduce((sum, product) => sum + (product.price * product.quantity), 0);
+          } else {
+          }
+        },
+
+        (error) => {
+          console.error('Có lỗi xảy ra : ', error);
+        }
+      );
+
     this.showDialog();
   }
 

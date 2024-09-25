@@ -112,9 +112,10 @@ export class RegisterComponent {
         const code = response.code;
         const message = response.message;
         if (code === 200) {
+          this.toastService.showSuccess(message);
           this.router.navigate(['/login']);
         } else {
-          this.toastService.showError("Register Fail!");
+          this.toastService.showError(message);
         }
       },
 

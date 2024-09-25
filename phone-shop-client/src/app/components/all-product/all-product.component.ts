@@ -21,6 +21,7 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { DialogModule } from 'primeng/dialog';
 import { ApiUrls } from '../../services/api/api-url';
 import { DataService } from '../../services/data.service';
+import { ToastService } from '../../services/toastService';
 
 @Component({
   selector: 'app-all-product',
@@ -41,7 +42,8 @@ import { DataService } from '../../services/data.service';
     DialogModule
   ],
   templateUrl: './all-product.component.html',
-  styleUrl: './all-product.component.scss'
+  styleUrl: './all-product.component.scss',
+  providers:[ToastService]
 })
 export class AllProductComponent implements OnInit {
   error = '';
@@ -63,13 +65,12 @@ export class AllProductComponent implements OnInit {
     private readonly apiService: ApiService,
     private readonly routers: Router,
     private readonly dataService: DataService,
+    private toastService: ToastService
   ) { }
 
   ngOnInit() {
     this.getData();
     this.getCategories();
-    this.minPrice = 0;
-    this.maxPrice = 0;
   }
 
   addToCart(id: string){
@@ -86,13 +87,14 @@ export class AllProductComponent implements OnInit {
         const message = response.message;
         if (code === 200) {
           this.dataService.setListCart();
+          this.toastService.showSuccess("Add to cart success!");
         } else {
-          this.error = message;
+          this.toastService.showError(message);
         }
       },
 
       (error) => {
-        console.error('Có lỗi xảy ra : ', error);
+        this.toastService.showError("Something went wrong!");
       }
     );
   }
