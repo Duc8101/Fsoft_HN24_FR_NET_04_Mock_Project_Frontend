@@ -3,20 +3,20 @@
     <div class="col-12">
         <div class="card px-6 py-6">
             <p-table #dt [value]="products" [columns]="cols" responsiveLayout="scroll" [rows]="10"
-                [globalFilterFields]="[]"
-                [rowHover]="true" dataKey="id">
+                [globalFilterFields]="[]" [rowHover]="true" dataKey="id">
                 <ng-template pTemplate="caption">
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
                         <h3 class="m-0">Manage Products</h3>
                         <div class="flex">
-                            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+                            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
+                                (click)="openNew()"></button>
                             <span class="block mt-2 md:mt-0 p-input-icon-left">
                                 <i class="pi pi-search"></i>
                                 <input pInputText type="text" (input)="onGlobalFilter($event)" placeholder="Search..."
                                     class="w-full sm:w-auto" />
                             </span>
                         </div>
-                        
+
                     </div>
                 </ng-template>
                 <ng-template pTemplate="header">
@@ -63,14 +63,16 @@
                                 <button pButton pRipple icon="pi pi-pencil"
                                     class="p-button-rounded p-button-success mr-2"
                                     (click)="openUpdateProduct(product)"></button>
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning mr-2"
                                     (click)="openDeleteProduct(product)"></button>
+                                <button pButton pRipple type="button" class="p-button-rounded" icon="pi pi-comments"
+                                    (click)="getFeedBack(product.productId)"></button>
                             </div>
                         </td>
                     </tr>
                 </ng-template>
             </p-table>
-            <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="9" [totalRecords]="totalItem"/>
+            <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="10" [totalRecords]="totalItem" />
         </div>
 
         <!-- Delete form -->
@@ -89,21 +91,26 @@
 
 
         <!-- Detail form -->
-        
-        <p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Product Details" [modal]="true" class="p-fluid">
+
+        <p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Product Details" [modal]="true"
+            class="p-fluid">
             <ng-template pTemplate="content">
-                <img [src]="product.image" [alt]="product.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="product.image">
+                <img [src]="product.image" [alt]="product.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2"
+                    *ngIf="product.image">
                 <form [formGroup]="form">
                     <div class="field">
                         <label for="name">Name</label>
-                        <input type="text" pInputText id="name" [(ngModel)]="product.productName" required autofocus formControlName="productName"/>
-                        <div class="text-red-800" *ngIf="form.get('productName')?.invalid && form.get('productName')?.touched">
+                        <input type="text" pInputText id="name" [(ngModel)]="product.productName" required autofocus
+                            formControlName="productName" />
+                        <div class="text-red-800"
+                            *ngIf="form.get('productName')?.invalid && form.get('productName')?.touched">
                             Name is required
-                          </div>
+                        </div>
                     </div>
                     <div class="field">
                         <label for="description">Image</label>
-                        <input type="text" pInputText id="category" [(ngModel)]="product.image" required autofocus formControlName="image"/>
+                        <input type="text" pInputText id="category" [(ngModel)]="product.image" required autofocus
+                            formControlName="image" />
                         <div class="text-red-800" *ngIf="form.get('image')?.invalid && form.get('image')?.touched">
                             Image is required
                         </div>
@@ -112,36 +119,42 @@
                         <label for="category">Category</label>
                         <select class="form-select" [(ngModel)]="product.categoryId" formControlName="categoryId">
                             @for(category of categories; track $index){
-                                @if($index == 1){
-                                    <option value="{{category.categoryId}}" selected>{{category.categoryName}}</option>
-                                }@else {
-                                    <option value="{{category.categoryId}}">{{category.categoryName}}</option>
-                                }
+                            @if($index == 1){
+                            <option value="{{category.categoryId}}" selected>{{category.categoryName}}</option>
+                            }@else {
+                            <option value="{{category.categoryId}}">{{category.categoryName}}</option>
+                            }
                             }
                         </select>
-                        <div class="text-red-800" *ngIf="form.get('categoryId')?.invalid && form.get('categoryId')?.touched">
+                        <div class="text-red-800"
+                            *ngIf="form.get('categoryId')?.invalid && form.get('categoryId')?.touched">
                             Category is required
                         </div>
                     </div>
                     <div class="field">
                         <label for="description">Description</label>
-                        <textarea id="description" pInputTextarea [(ngModel)]="product.description" required rows="3" cols="20"  formControlName="description"></textarea>
-                        <div class="text-red-800" *ngIf="form.get('description')?.invalid && form.get('description')?.touched">
+                        <textarea id="description" pInputTextarea [(ngModel)]="product.description" required rows="3"
+                            cols="20" formControlName="description"></textarea>
+                        <div class="text-red-800"
+                            *ngIf="form.get('description')?.invalid && form.get('description')?.touched">
                             Description is required
                         </div>
                     </div>
                     <div class="formgrid grid">
                         <div class="field col">
                             <label for="price">Price</label>
-                            <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD" locale="en-US"  formControlName="price"></p-inputNumber>
+                            <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD"
+                                locale="en-US" formControlName="price"></p-inputNumber>
                             <div class="text-red-800" *ngIf="form.get('price')?.invalid && form.get('price')?.touched">
                                 Price is required
                             </div>
                         </div>
                         <div class="field col">
                             <label for="quantity">Quantity</label>
-                            <p-inputNumber id="quantity" [(ngModel)]="product.quantity"  formControlName="quantity"></p-inputNumber>
-                            <div class="text-red-800" *ngIf="form.get('quantity')?.invalid && form.get('quantity')?.touched">
+                            <p-inputNumber id="quantity" [(ngModel)]="product.quantity"
+                                formControlName="quantity"></p-inputNumber>
+                            <div class="text-red-800"
+                                *ngIf="form.get('quantity')?.invalid && form.get('quantity')?.touched">
                                 Quantity is required
                             </div>
                         </div>
@@ -150,13 +163,56 @@
             </ng-template>
 
             <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
                 @if(isUpdate){
-                    <button pButton pRipple label="Update" icon="pi pi-check" class="p-button-text" (click)="updateProduct()" [disabled]="form.invalid"></button>
+                <button pButton pRipple label="Update" icon="pi pi-check" class="p-button-text"
+                    (click)="updateProduct()" [disabled]="form.invalid"></button>
                 }@else {
-                    <button pButton pRipple label="Add" icon="pi pi-check" class="p-button-text" (click)="createProduct()" [disabled]="form.invalid"></button>
+                <button pButton pRipple label="Add" icon="pi pi-check" class="p-button-text" (click)="createProduct()"
+                    [disabled]="form.invalid"></button>
                 }
             </ng-template>
         </p-dialog>
     </div>
 </div>
+
+<!-- Modal (PrimeNG Dialog) hiển thị danh sách phản hồi -->
+<p-dialog header="Feedback List" [(visible)]="displayFeedbackList" [modal]="true" [style]="{width: '50vw'}"
+    [closable]="true">
+    <div class="p-fluid">
+        <p-table [value]="feedbacks" [paginator]="true" [rows]="5" responsiveLayout="scroll">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Full Name</th>
+                    <th>Feedback</th>
+                    <th>Action</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-feedback>
+                <tr>
+                    <td>{{feedback.fullName}}</td>
+                    <td>{{feedback.comment}}</td>
+                    <td>
+                        <button pButton label="Reply" icon="pi pi-reply" class="p-button-sm p-button-info"
+                            (click)="openReplyModal(feedback)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</p-dialog>
+<p-dialog header="Reply to Feedback" [(visible)]="displayReplyModal" [modal]="true" [style]="{width: '40vw'}" [closable]="true">
+    <div class="p-fluid">
+        <div class="field">
+            <label for="replyComment">Your Reply:</label>
+            <textarea id="replyComment" pInputTextarea [(ngModel)]="replyContent" rows="5" cols="30" placeholder="Write your reply..."></textarea>
+        </div>
+    </div>
+
+    <!-- Nút để submit phản hồi -->
+    <p-footer>
+        <button pButton label="Submit" icon="pi pi-check" class="p-button-success" (click)="submitReply()"></button>
+        <button pButton label="Cancel" icon="pi pi-times" class="p-button-secondary" (click)="displayReplyModal = false"></button>
+    </p-footer>
+</p-dialog>
