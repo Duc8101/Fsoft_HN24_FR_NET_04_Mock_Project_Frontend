@@ -45,9 +45,6 @@ export class DataService{
         return this.carts;
     }
 
-    getLoginStatus(){
-        return sessionStorage.getItem('username') ? true : false;
-    }
 
     setSearchName(name: string){
         this.searchName = name;

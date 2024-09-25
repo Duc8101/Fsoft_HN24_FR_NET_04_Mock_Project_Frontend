@@ -66,6 +66,10 @@ export class CustomerTopbarComponent implements OnInit {
     this.router.navigate(['/search']);
   }
 
+  getLoginStatus(){
+    return sessionStorage.getItem('username') ? true : false;
+  }
+
   getRoleUser(){
     return sessionStorage.getItem("roleName");
   }
