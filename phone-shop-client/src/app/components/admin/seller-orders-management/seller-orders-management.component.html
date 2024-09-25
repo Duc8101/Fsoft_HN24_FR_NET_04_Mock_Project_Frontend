@@ -21,7 +21,7 @@
                     <span class="p-column-title">Order Id</span>
                     {{order.orderId}}
                 </td>
-                <td style="width:10%; min-width:7rem;">
+                <td class="p-fluid" style="width:10%; min-width:7rem;">
                     <span class="p-column-title">Status</span>
                     <p-dropdown [options]="statusEnum" [ngModel]="order.status" placeholder="Status" appendTo="body"
                         (onChange)="onStatusChange($event, order)"></p-dropdown>
@@ -47,7 +47,7 @@
             </tr>
         </ng-template>
     </p-table>
-    <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="9" [totalRecords]="totalItem" />
+    <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="10" [totalRecords]="totalItem" />
 </div>
 <p-confirmPopup />
 <p-dialog header="Order Id: {{currentOrderId}}" [(visible)]="visible" [modal]="true"
@@ -68,7 +68,7 @@
             <tr>
                 <td style="width:200px" class="font-bold">{{item.productName}}</td>
                 <td style="width:200px">
-                    <img [src]="'assets/demo/images/product/' + item.image" [alt]="item.productName" width="100"
+                    <img [src]="item.image" [alt]="item.productName" width="100"
                         class="shadow-4" />
                 </td>
                 <td style="width:200px">

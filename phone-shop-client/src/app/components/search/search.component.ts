@@ -61,32 +61,6 @@ export class SearchComponent implements OnInit {
     this.dataService.callFunction$.subscribe(() => {
       this.getData();
     });
-    this.sourceCities = [
-      { name: 'San Francisco', code: 'SF' },
-      { name: 'London', code: 'LDN' },
-      { name: 'Paris', code: 'PRS' },
-      { name: 'Istanbul', code: 'IST' },
-      { name: 'Berlin', code: 'BRL' },
-      { name: 'Barcelona', code: 'BRC' },
-      { name: 'Rome', code: 'RM' },
-    ];
-
-    this.targetCities = [];
-
-    this.orderCities = [
-      { name: 'San Francisco', code: 'SF' },
-      { name: 'London', code: 'LDN' },
-      { name: 'Paris', code: 'PRS' },
-      { name: 'Istanbul', code: 'IST' },
-      { name: 'Berlin', code: 'BRL' },
-      { name: 'Barcelona', code: 'BRC' },
-      { name: 'Rome', code: 'RM' },
-    ];
-
-    this.sortOptions = [
-      { label: 'Price High to Low', value: '!price' },
-      { label: 'Price Low to High', value: 'price' },
-    ];
   }
 
   addToCart(id: string){
