@@ -1,5 +1,7 @@
 <div class="container mx-8">
     <div class="card">
+        <p-toast />
+        <h1>User Profile</h1>
         <div class="card p-fluid">
             <div class="">
                 <form>
@@ -24,6 +26,41 @@
                         <input type="text" pInputText name="username" [(ngModel)]="user.username"/>
                     </div>
                 </form>
+                <p-dialog [(visible)]="dialogChangePassword" [style]="{width: '450px'}" header="Change Password" [modal]="true"
+                    class="p-fluid">
+                    <ng-template pTemplate="content">
+                        <form [formGroup]="formChangePassword">
+                            <div class="field">
+                                <label htmlFor="currentPassword">Current Password</label>
+                                <input type="password" pInputText name="currentPassword" formControlName="currentPassword" />
+                                <div class="text-red-800"
+                                    *ngIf="formUpdate.get('currentPassword')?.invalid && formUpdate.get('currentPassword')?.touched">
+                                    Current Password is required
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label htmlFor="newPassword">New Password</label>
+                                <input type="password" pInputText name="newPassword" formControlName="newPassword" />
+                                <div class="text-red-800"
+                                    *ngIf="formUpdate.get('newPassword')?.invalid && formUpdate.get('newPassword')?.touched">
+                                    New Password is required
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label htmlFor="confirmPassword">Confirm Password</label>
+                                <input type="password" pInputText name="confirmPassword" formControlName="confirmPassword" />
+                                <div class="text-red-800"
+                                    *ngIf="formUpdate.get('confirmPassword')?.invalid && formUpdate.get('confirmPassword')?.touched">
+                                    Confirm Password is required
+                                </div>
+                            </div>
+                        </form>
+                    </ng-template>
+                    <ng-template pTemplate="footer">
+                        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                        <button pButton pRipple label="Update" icon="pi pi-check" class="p-button-text" (click)="changePassword()" [disabled]="formChangePassword.invalid"></button>
+                    </ng-template>
+                </p-dialog>
                 <p-dialog [visible]="dialogUpdate" [style]="{width: '450px'}" header="User Profile" [modal]="true"
                     class="p-fluid">
                     <ng-template pTemplate="content">
@@ -60,7 +97,7 @@
                 </p-dialog>
             </div>
         </div>
-        <button pButton pRipple type="button" label="Change Password" (click)="openChangePassword()"></button>
-        <button pButton pRipple type="button" label="Update" (click)="openUpdateUser()"></button>
+        <button pButton pRipple type="button" class="mr-2" label="Change Password" (click)="openChangePassword()"></button>
+        <button pButton pRipple type="button" class="mr-2" label="Update" (click)="openUpdateUser()"></button>
     </div>
 </div>

@@ -19,6 +19,9 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { TagModule } from 'primeng/tag';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { DialogModule } from 'primeng/dialog';
+import { ApiUrls } from '../../services/api/api-url';
+import { DataService } from '../../services/data.service';
+import { ToastService } from '../../services/toastService';
 
 @Component({
   selector: 'app-all-product',
@@ -39,7 +42,8 @@ import { DialogModule } from 'primeng/dialog';
     DialogModule
   ],
   templateUrl: './all-product.component.html',
-  styleUrl: './all-product.component.scss'
+  styleUrl: './all-product.component.scss',
+  providers:[ToastService]
 })
 export class AllProductComponent implements OnInit {
   error = '';
@@ -55,17 +59,44 @@ export class AllProductComponent implements OnInit {
   totalItem: number = 0;
   pageNum: number = 0;
   first: number = 0;
+  
 
   constructor(
     private readonly apiService: ApiService,
-    private readonly routers: Router
+    private readonly routers: Router,
+    private readonly dataService: DataService,
+    private toastService: ToastService
   ) { }
 
   ngOnInit() {
     this.getData();
     this.getCategories();
-    this.minPrice = 0;
-    this.maxPrice = 0;
+  }
+
+  addToCart(id: string){
+    let body = {
+      productId: id
+    }
+
+    console.log(id)
+    this.apiService
+    .post(ApiUrls.URL_CART_CREATE,body, null)
+    .subscribe(
+      (response) => {
+        const code = response.code;
+        const message = response.message;
+        if (code === 200) {
+          this.dataService.setListCart();
+          this.toastService.showSuccess("Add to cart success!");
+        } else {
+          this.toastService.showError(message);
+        }
+      },
+
+      (error) => {
+        this.toastService.showError("Something went wrong!");
+      }
+    );
   }
 
   getData() {

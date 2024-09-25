@@ -28,21 +28,32 @@ export class CustomerTopbarComponent implements OnInit {
   constructor(public layoutService: LayoutService, public router: Router,
     public readonly dataService: DataService, private readonly apiService: ApiService) { }
   ngOnInit(): void {
+    this.dataService.setListCart();
     this.items = [
         {
             label: 'Options',
             items: [
                 {
                     label: 'User-Profile',
-                    icon: 'pi pi-user-edit'
+                    icon: 'pi pi-user-edit',
+                    command: () => {
+                      this.router.navigate(['/user-profile']);
+                    }
                 },
                 {
                     label: 'Management Order',
-                    icon: 'pi pi-cart-arrow-down'
+                    icon: 'pi pi-cart-arrow-down',
+                    command: () => {
+                      this.router.navigate(['/customer-orders-management']);
+
+                    }
                 },
                 {
                     label: 'Logout',
-                    icon: 'pi pi-sign-out'
+                    icon: 'pi pi-sign-out',
+                    command: () => {
+                      this.logout();
+                    }
                 }
             ]
         }
@@ -53,6 +64,38 @@ export class CustomerTopbarComponent implements OnInit {
     this.dataService.setSearchName(this.searchName);
     this.dataService.triggerFunctionCall();
     this.router.navigate(['/search']);
+  }
+
+  getLoginStatus(){
+    return sessionStorage.getItem('username') ? true : false;
+  }
+
+  getRoleUser(){
+    return sessionStorage.getItem("roleName");
+  }
+
+  logout(){
+    this.apiService.get(ApiUrls.URL_LOGOUT,null).subscribe(
+      (response) => {
+        const code = response.code;
+        console.log(code)
+        if (code === 200) {
+          this.router.navigate(['/login']);
+          sessionStorage.clear();
+          localStorage.clear();
+        } else {
+          alert(`${response.message}`);
+        }
+      },
+
+      (error) => {
+        if (error.status === 401) {
+          alert('Unauthorized');
+        } else {
+          console.error('Có lỗi xảy ra : ', error);
+        }
+      }
+    );
   }
 
   login() {

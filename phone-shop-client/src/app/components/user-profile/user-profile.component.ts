@@ -9,6 +9,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { ApiUrls } from '../../services/api/api-url';
 import { FormsModule } from '@angular/forms'; 
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-user-profile',
@@ -19,15 +20,17 @@ import { FormsModule } from '@angular/forms';
     DialogModule,
     InputTextModule,
     ButtonModule,
-    FormsModule
+    FormsModule,
+    ToastModule
   ],
-  
+  providers: [MessageService],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.scss'
 })
 export class UserProfileComponent implements OnInit {
   error = "";
   formUpdate: FormGroup;
+  formChangePassword: FormGroup;
   user: User = {
     fullName : "",
     phone : "",
@@ -55,13 +58,58 @@ export class UserProfileComponent implements OnInit {
       address: new FormControl(''),
       username: new FormControl(''),
     });
+    this.formChangePassword = new FormGroup({
+      currentPassword: new FormControl('', [Validators.required]),
+      newPassword: new FormControl('',[Validators.required]),
+      confirmPassword: new FormControl('', [Validators.required]),
+    });
   }
   ngOnInit(): void {
     this.getUserProfile();
+    console.log(localStorage.getItem('token'));
+    
+  }
+
+  showSuccess(action: string) {
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: action + ' Successful' });
+  }
+
+  showError(action: string) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: action + ' Failed: '+ this.error});
   }
 
   openChangePassword(){
     this.dialogChangePassword = true;
+  }
+
+  changePassword(){
+    let changePassword = {
+      currentPassword: this.formChangePassword.value.currentPassword,
+      newPassword: this.formChangePassword.value.newPassword,
+      confirmPassword: this.formChangePassword.value.confirmPassword
+    };
+    this.apiService
+    .put(ApiUrls.URL_CHANGE_PASSWORD, changePassword)
+    .subscribe(
+      (response) => {
+        const code = response.code;
+        const message = response.message;
+        console.log(response)
+
+        if (code === 200) {
+          this.getUserProfile();
+          this.showSuccess("Change Password");
+          this.dialogChangePassword = false;
+        } else {
+          this.error = message;
+          this.showError("Change Password");
+        }
+      },
+
+      (error) => {
+        console.error('Có lỗi xảy ra : ', error);
+      }
+    );
   }
 
   openUpdateUser(){
@@ -98,6 +146,7 @@ export class UserProfileComponent implements OnInit {
 
   hideDialog() {
     this.dialogUpdate = false;
+    this.dialogChangePassword = false;
 }
 
   getUserProfile() {

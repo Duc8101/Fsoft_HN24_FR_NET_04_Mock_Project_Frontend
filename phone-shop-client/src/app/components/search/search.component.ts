@@ -61,32 +61,31 @@ export class SearchComponent implements OnInit {
     this.dataService.callFunction$.subscribe(() => {
       this.getData();
     });
-    this.sourceCities = [
-      { name: 'San Francisco', code: 'SF' },
-      { name: 'London', code: 'LDN' },
-      { name: 'Paris', code: 'PRS' },
-      { name: 'Istanbul', code: 'IST' },
-      { name: 'Berlin', code: 'BRL' },
-      { name: 'Barcelona', code: 'BRC' },
-      { name: 'Rome', code: 'RM' },
-    ];
+  }
 
-    this.targetCities = [];
+  addToCart(id: string){
+    let body = {
+      productId: id
+    }
 
-    this.orderCities = [
-      { name: 'San Francisco', code: 'SF' },
-      { name: 'London', code: 'LDN' },
-      { name: 'Paris', code: 'PRS' },
-      { name: 'Istanbul', code: 'IST' },
-      { name: 'Berlin', code: 'BRL' },
-      { name: 'Barcelona', code: 'BRC' },
-      { name: 'Rome', code: 'RM' },
-    ];
+    console.log(id)
+    this.apiService
+    .post(ApiUrls.URL_CART_CREATE,body, null)
+    .subscribe(
+      (response) => {
+        const code = response.code;
+        const message = response.message;
+        if (code === 200) {
+          this.dataService.setListCart();
+        } else {
+          this.error = message;
+        }
+      },
 
-    this.sortOptions = [
-      { label: 'Price High to Low', value: '!price' },
-      { label: 'Price Low to High', value: 'price' },
-    ];
+      (error) => {
+        console.error('Có lỗi xảy ra : ', error);
+      }
+    );
   }
 
   getData() {
@@ -94,9 +93,9 @@ export class SearchComponent implements OnInit {
     parameters.set("name", this.dataService.getSearchName());
     parameters.set("pageSize", 10);
     parameters.set("currentPage", 1);
-
+  
     this.apiService
-      .get(ApiUrls.URL_GET_ALL_PRODUCTS, parameters)
+      .post(ApiUrls.URL_GET_ALL_PRODUCTS,[], parameters)
       .subscribe(
         (response) => {
           const code = response.code;

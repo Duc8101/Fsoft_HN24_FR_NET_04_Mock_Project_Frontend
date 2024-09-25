@@ -15,4 +15,10 @@ export class ApiUrls{
     static readonly URL_GET_CATEGORY_GET_CATEGORIES_PAGINATION: string = "http://localhost:5125/Category/get-categories-pagination";
     static readonly URL_GET_USER_DETAIL: string = "http://localhost:5125/User/Detail";
     static readonly URL_UPDATE_USER: string = "http://localhost:5125/User/update-profile";
+    static readonly URL_CHANGE_PASSWORD: string = "http://localhost:5125/User/change-password";
+    static readonly URL_LOGOUT: string = "http://localhost:5125/User/Logout";
+    static readonly URL_CART_CREATE: string = "http://localhost:5125/Cart/Create";
+    static readonly URL_GET_CART: string = "http://localhost:5125/Cart/List";
+
+
 }
