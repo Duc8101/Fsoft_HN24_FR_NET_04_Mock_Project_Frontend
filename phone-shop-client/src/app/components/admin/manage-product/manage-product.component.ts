@@ -472,16 +472,19 @@ export class ManageProductComponent implements OnInit {
 
   downloadURL: string | null = null;
 
-  onFileSelected(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
+
+  onUpload(event: any) {
+    const file = event.files[0];
+    console.log("abc");
     if (file) {
       this.uploadFile(file).subscribe({
         next: (url) => {
-          this.downloadURL = url;
-          console.log('File available at', url);
+          this.product.image = url;
+          this.toastService.showSuccess("Success");
         },
         error: (error) => {
           console.error('Upload failed', error);
+          this.toastService.showError("Error");
         }
       });
     }

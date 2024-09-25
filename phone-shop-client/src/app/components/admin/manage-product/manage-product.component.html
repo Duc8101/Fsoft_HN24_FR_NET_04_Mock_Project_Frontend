@@ -62,7 +62,8 @@
                                 <button pButton pRipple icon="pi pi-pencil"
                                     class="p-button-rounded p-button-success mr-2"
                                     (click)="openUpdateProduct(product)"></button>
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning mr-2"
+                                <button pButton pRipple icon="pi pi-trash"
+                                    class="p-button-rounded p-button-warning mr-2"
                                     (click)="openDeleteProduct(product)"></button>
                                 <button pButton pRipple type="button" class="p-button-rounded" icon="pi pi-comments"
                                     (click)="getFeedBack(product.productId)"></button>
@@ -108,6 +109,9 @@
                     </div>
                     <div class="field">
                         <label for="description">Image</label>
+                        <p-fileUpload mode="basic" name="demo[]" chooseIcon="pi pi-upload"
+                            url="https://www.primefaces.org/cdn/api/upload.php" accept="image/*" maxFileSize="1000000"
+                            (onUpload)="onUpload($event)" [auto]="true" chooseLabel="Browse" />
                         <input type="text" pInputText id="category" [(ngModel)]="product.image" required autofocus
                             formControlName="image" />
                         <div class="text-red-800" *ngIf="form.get('image')?.invalid && form.get('image')?.touched">
@@ -204,7 +208,8 @@
         </p-table>
     </div>
 </p-dialog>
-<p-dialog header="Reply to Feedback" [(visible)]="displayReplyModal" [modal]="true" [style]="{width: '40vw'}" [closable]="true">
+<p-dialog header="Reply to Feedback" [(visible)]="displayReplyModal" [modal]="true" [style]="{width: '40vw'}"
+    [closable]="true">
     <div class="p-fluid">
         <p-table [value]="replyList" [paginator]="true" [rows]="5" responsiveLayout="scroll">
             <ng-template pTemplate="header">
@@ -224,7 +229,8 @@
         </p-table>
         <div class="field">
             <label for="replyComment">Your Reply:</label>
-            <textarea id="replyComment" pInputTextarea [(ngModel)]="replyContent" rows="5" cols="30" placeholder="Write your reply..."></textarea>
+            <textarea id="replyComment" pInputTextarea [(ngModel)]="replyContent" rows="5" cols="30"
+                placeholder="Write your reply..."></textarea>
         </div>
     </div>
 
