@@ -39,8 +39,6 @@
                 </td>
                 <td>
                     <div class="flex">
-                        <button *ngIf="order.status === 'Pending'" pButton pRipple icon="pi pi-trash"
-                            class="p-button-rounded p-button-warning mr-2" (click)="confirm2($event)"></button>
                         <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success" (click)="getOrderDetail(order.orderId)"></button>
                     </div>
                 </td>

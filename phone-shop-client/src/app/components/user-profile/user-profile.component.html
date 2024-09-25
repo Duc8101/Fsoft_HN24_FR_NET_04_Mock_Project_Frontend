@@ -1,103 +1,94 @@
-<div class="container mx-8">
-    <div class="card">
-        <p-toast />
-        <h1>User Profile</h1>
+<div class="grid mx-8 justify-content-center mt-3 mb-3">
+    <div class="card col-6">
+        <p-toast></p-toast>
+        <h1 class="text-center">User Profile</h1>
         <div class="card p-fluid">
-            <div class="">
-                <form>
+            <form>
+                <div class="field">
+                    <label htmlFor="fullName">Full Name</label>
+                    <input disabled type="text" pInputText name="fullName" [(ngModel)]="user.fullName" />
+                </div>
+                <div class="field">
+                    <label htmlFor="phone">Phone</label>
+                    <input disabled type="text" pInputText name="phone" [(ngModel)]="user.phone" />
+                </div>
+                <div class="field">
+                    <label htmlFor="email">Email</label>
+                    <input disabled type="text" pInputText name="email" [(ngModel)]="user.email" />
+                </div>
+                <div class="field">
+                    <label htmlFor="address">Address</label>
+                    <input disabled type="text" pInputText name="address" [(ngModel)]="user.address" />
+                </div>
+                <div class="field">
+                    <label htmlFor="username">Username</label>
+                    <input disabled type="text" pInputText name="username" [(ngModel)]="user.username" />
+                </div>
+            </form>
+            <div class="flex justify-content-center mt-3">
+                <button pButton pRipple type="button" class="mx-8" label="Change Password" (click)="openChangePassword()"></button>
+                <button pButton pRipple type="button" class="mx-8" label="Update" (click)="openUpdateUser()"></button>
+            </div>
+        </div>
+        <p-dialog [(visible)]="dialogChangePassword" [style]="{width: '450px'}" header="Change Password" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+                <form [formGroup]="formChangePassword">
+                    <div class="field">
+                        <label htmlFor="currentPassword">Current Password</label>
+                        <input type="password" pInputText name="currentPassword" formControlName="currentPassword" />
+                        <div class="text-red-800" *ngIf="formChangePassword.get('currentPassword')?.invalid && formChangePassword.get('currentPassword')?.touched">
+                            Current Password is required
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label htmlFor="newPassword">New Password</label>
+                        <input type="password" pInputText name="newPassword" formControlName="newPassword" />
+                        <div class="text-red-800" *ngIf="formChangePassword.get('newPassword')?.invalid && formChangePassword.get('newPassword')?.touched">
+                            New Password is required
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label htmlFor="confirmPassword">Confirm Password</label>
+                        <input type="password" pInputText name="confirmPassword" formControlName="confirmPassword" />
+                        <div class="text-red-800" *ngIf="formChangePassword.get('confirmPassword')?.invalid && formChangePassword.get('confirmPassword')?.touched">
+                            Confirm Password is required
+                        </div>
+                    </div>
+                </form>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <div class="flex justify-content-center">
+                    <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                    <button pButton pRipple label="Update" icon="pi pi-check" class="p-button-text" (click)="changePassword()" [disabled]="formChangePassword.invalid"></button>
+                </div>
+            </ng-template>
+        </p-dialog>
+        <p-dialog [(visible)]="dialogUpdate" [style]="{width: '450px'}" header="User Profile" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+                <form [formGroup]="formUpdate" (ngSubmit)="updateUser()">
                     <div class="field">
                         <label htmlFor="fullName">Full Name</label>
-                        <input type="text" pInputText name="fullName" [(ngModel)]="user.fullName"/>
+                        <input type="text" pInputText name="fullName" [(ngModel)]="userUpdate.fullName" formControlName="fullName" />
+                        <div class="text-red-800" *ngIf="formUpdate.get('fullName')?.invalid && formUpdate.get('fullName')?.touched">
+                            Full Name is required
+                        </div>
                     </div>
                     <div class="field">
                         <label htmlFor="phone">Phone</label>
-                        <input type="text" pInputText name="phone" [(ngModel)]="user.phone"/>
-                    </div>
-                    <div class="field">
-                        <label htmlFor="email">Email</label>
-                        <input type="text" pInputText name="email" [(ngModel)]="user.email" />
+                        <input type="text" pInputText name="phone" [(ngModel)]="userUpdate.phone" formControlName="phone" />
                     </div>
                     <div class="field">
                         <label htmlFor="address">Address</label>
-                        <input type="text" pInputText name="address" [(ngModel)]="user.address"/>
-                    </div>
-                    <div class="field">
-                        <label htmlFor="username">Username</label>
-                        <input type="text" pInputText name="username" [(ngModel)]="user.username"/>
+                        <input type="text" pInputText name="address" [(ngModel)]="userUpdate.address" formControlName="address" />
                     </div>
                 </form>
-                <p-dialog [(visible)]="dialogChangePassword" [style]="{width: '450px'}" header="Change Password" [modal]="true"
-                    class="p-fluid">
-                    <ng-template pTemplate="content">
-                        <form [formGroup]="formChangePassword">
-                            <div class="field">
-                                <label htmlFor="currentPassword">Current Password</label>
-                                <input type="password" pInputText name="currentPassword" formControlName="currentPassword" />
-                                <div class="text-red-800"
-                                    *ngIf="formUpdate.get('currentPassword')?.invalid && formUpdate.get('currentPassword')?.touched">
-                                    Current Password is required
-                                </div>
-                            </div>
-                            <div class="field">
-                                <label htmlFor="newPassword">New Password</label>
-                                <input type="password" pInputText name="newPassword" formControlName="newPassword" />
-                                <div class="text-red-800"
-                                    *ngIf="formUpdate.get('newPassword')?.invalid && formUpdate.get('newPassword')?.touched">
-                                    New Password is required
-                                </div>
-                            </div>
-                            <div class="field">
-                                <label htmlFor="confirmPassword">Confirm Password</label>
-                                <input type="password" pInputText name="confirmPassword" formControlName="confirmPassword" />
-                                <div class="text-red-800"
-                                    *ngIf="formUpdate.get('confirmPassword')?.invalid && formUpdate.get('confirmPassword')?.touched">
-                                    Confirm Password is required
-                                </div>
-                            </div>
-                        </form>
-                    </ng-template>
-                    <ng-template pTemplate="footer">
-                        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-                        <button pButton pRipple label="Update" icon="pi pi-check" class="p-button-text" (click)="changePassword()" [disabled]="formChangePassword.invalid"></button>
-                    </ng-template>
-                </p-dialog>
-                <p-dialog [visible]="dialogUpdate" [style]="{width: '450px'}" header="User Profile" [modal]="true"
-                    class="p-fluid">
-                    <ng-template pTemplate="content">
-                        <form [formGroup]="formUpdate" onsubmit="updateUser()">
-                            <div class="field">
-                                <label htmlFor="fullName">Full Name</label>
-                                <input type="text" pInputText name="fullName" [(ngModel)]="userUpdate.fullName" formControlName="fullName" />
-                                <div class="text-red-800"
-                                    *ngIf="formUpdate.get('fullName')?.invalid && formUpdate.get('fullName')?.touched">
-                                    Full Name is required
-                                </div>
-                            </div>
-                            <div class="field">
-                                <label htmlFor="phone">Phone</label>
-                                <input type="text" pInputText name="phone" [(ngModel)]="userUpdate.phone" formControlName="phone" />
-                            </div>
-                            <div class="field">
-                                <label htmlFor="email">Email</label>
-                                <input type="text" pInputText name="email" [(ngModel)]="userUpdate.email" formControlName="email" />
-                                <div class="text-red-800" *ngIf="formUpdate.get('image')?.invalid && formUpdate.get('image')?.touched">
-                                    Email is required
-                                </div>
-                            </div>
-                            <div class="field">
-                                <label htmlFor="address">Address</label>
-                                <input type="text" pInputText name="address" [(ngModel)]="userUpdate.address" formControlName="address" />
-                            </div>
-                        </form>
-                    </ng-template>
-                    <ng-template pTemplate="footer">
-                        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-                        <button pButton pRipple label="Update" icon="pi pi-check" class="p-button-text" (click)="updateUser()" [disabled]="formUpdate.invalid"></button>
-                    </ng-template>
-                </p-dialog>
-            </div>
-        </div>
-        <button pButton pRipple type="button" class="mr-2" label="Change Password" (click)="openChangePassword()"></button>
-        <button pButton pRipple type="button" class="mr-2" label="Update" (click)="openUpdateUser()"></button>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <div class="flex justify-content-center">
+                    <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                    <button pButton pRipple label="Update" icon="pi pi-check" class="p-button-text" (click)="updateUser()" [disabled]="formUpdate.invalid"></button>
+                </div>
+            </ng-template>
+        </p-dialog>
     </div>
 </div>

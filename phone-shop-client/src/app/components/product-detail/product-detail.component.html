@@ -1,36 +1,74 @@
-<div class="container mx-8">
-    <div class="card">
-        <div class="container-fliud">
-            <div class="wrapper row">
-                <div class="preview col-6">
-                    <div class="preview-pic tab-content">
-                      <div class="tab-pane active" id="pic-1">
-                        <img class="product-image" src="{{this.product.image}}" style="width: 400px; height: auto;"/></div>
-                    </div>
+<div class="grid mx-8">
+    <div class="card col-12 mb-2">
+        <div class="grid">
+            <div class="col-4 flex align-items-center justify-content-center">
+                <div class="flex justify-content-center">
+                    <p-image src="{{this.product.image}}" alt="Image" width="250" [preview]="true"></p-image>
                 </div>
-                <div class="details col-6">
-                    <h3 class="product-title">{{this.product.productName}}</h3>
-                    <div class="rating">
-                        <div class="stars">
-                            <i class="pi pi-star-fill checked"></i>
-                            <i class="pi pi-star-fill checked"></i>
-                            <i class="pi pi-star-fill checked"></i>
-                            <i class="pi pi-star-fill"></i>
-                            <i class="pi pi-star-fill"></i>
-                        </div>
-                        <span class="review-no">41 reviews</span>
-                    </div>
-                    <h4>Price: {{this.product.price}}$</h4>
-                    <p class="product-description">{{this.product.description}}</p>
+            </div>
+            <div class="col-1">
+                <p-divider layout="vertical">
+                </p-divider>
+            </div>
+            <div class="col-7 align-items-center justify-content-center">
+                <h3 class="product-title">{{this.product.productName}}</h3>
+                <div class="rating">
+                    <p-rating [ngModel]="this.product.rate" [readonly]="true" [cancel]="false"></p-rating>
+                </div>
+                <h4>Price: {{this.product.price}}$</h4>
+                <h4>Quantiy: {{this.product.quantity}}</h4>
+                <p class="product-description">{{this.product.description}}</p>
 
-                    <div class="action">
-                        <button class="p-button-info p-button p-3" type="button">
-                            <i class="pi pi-shopping-cart p-1"></i>
-                              ADD TO CART
-                        </button>
-                    </div>
+                <div class="action">
+                    <button (click)="addToCart(this.productId)" class="p-button-info p-button p-3" type="button">
+                        <i class="pi pi-shopping-cart p-1"></i>
+                        ADD TO CART
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+    <div class="card col-12 mb-5">
+        <h3>Feedback List</h3>
+        <p-divider></p-divider>
+        <div *ngFor="let feedback of feedbacks" class="feedback-card p-shadow-3 p-mb-3 p-p-3">
+            <div class="p-grid">
+                <div class="p-col">
+                    <h5 class="feedback-username">{{ feedback.creatorName }}</h5>
+                    <p-rating [ngModel]="feedback.rate" [readonly]="true" [cancel]="false"></p-rating>
+                    <br>
+                    <span class="feedback-time p-text-secondary">{{ feedback.createdAt }}</span>
+                </div>
+            </div>
+            <div class="p-grid">
+                <div class="p-col">
+                    <p class="feedback-comment">{{ feedback.comment }}</p>
+                </div>
+                <div class="p-col">
+                    <a (click)="openReplyModal(feedback)" [hidden]="feedback.feedBackReplies === 0">View replies</a>
+                </div>
+            </div>
+            <p-divider></p-divider>
+        </div>
+    </div>
 </div>
+<p-dialog header="Replies List" [(visible)]="displayReplyModal" [modal]="true" [style]="{width: '40vw'}" [closable]="true">
+    <div class="p-fluid">
+        <p-table [value]="replyList" [paginator]="true" [rows]="5" responsiveLayout="scroll">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>CreateDate</th>
+                    <th>Full Name</th>
+                    <th>Feedback</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-feedback>
+                <tr>
+                    <td>{{feedback.createdAt}}</td>
+                    <td>{{feedback.creatorName}}</td>
+                    <td>{{feedback.comment}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</p-dialog>

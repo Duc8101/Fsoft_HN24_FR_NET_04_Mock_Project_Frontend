@@ -53,9 +53,8 @@ export class UserProfileComponent implements OnInit {
   constructor(private readonly apiService: ApiService,private messageService: MessageService) { 
     this.formUpdate = new FormGroup({
       fullName: new FormControl('', [Validators.required]),
-      phone: new FormControl(''),
-      email: new FormControl('', [Validators.required]),
-      address: new FormControl(''),
+      phone: new FormControl('',[Validators.required]),
+      address: new FormControl('',[Validators.required]),
       username: new FormControl(''),
     });
     this.formChangePassword = new FormGroup({

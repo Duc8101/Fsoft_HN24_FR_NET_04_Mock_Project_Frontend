@@ -217,3 +217,35 @@ img {
     transform: scale(1);
   }
 }
+
+.product-container {
+  width: 80%; /* Thu nhỏ phần tử xuống 80% */
+  margin: 0 auto; /* Căn giữa phần tử theo chiều ngang */
+}
+
+.feedback-display {
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f4f7f9; /* Nền sáng hơn */
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ cho khu vực hiển thị */
+}
+
+.feedback-card {
+  background-color: #ffffff; /* Màu nền trắng cho card */
+  border-radius: 8px; /* Bo góc card */
+  transition: transform 0.2s; /* Hiệu ứng hover */
+}
+
+.feedback-username {
+  font-weight: bold; /* Chữ đậm cho tên người dùng */
+}
+
+.feedback-time {
+  font-size: 0.9em; /* Kích thước chữ nhỏ hơn cho thời gian */
+}
+
+.feedback-comment {
+  font-size: 1.5em; /* Kích thước chữ bình thường */
+  color: #333; /* Màu chữ cho bình luận */
+}

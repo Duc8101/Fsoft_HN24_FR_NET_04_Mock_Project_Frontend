@@ -14,6 +14,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DataService } from '../../services/data.service';
 import { ApiUrls } from '../../services/api/api-url';
 import { TagModule } from 'primeng/tag';
+import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 
 
 @Component({
@@ -26,7 +27,8 @@ import { TagModule } from 'primeng/tag';
     DropdownModule,
     RatingModule,
     ButtonModule,
-    TagModule
+    TagModule,
+    PaginatorModule
   ],
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss',
@@ -37,17 +39,9 @@ export class SearchComponent implements OnInit {
 
   products: Product[] = [];
 
-  sortOptions: SelectItem[] = [];
-
-  sortOrder: number = 0;
-
-  sortField: string = '';
-
-  sourceCities: any[] = [];
-
-  targetCities: any[] = [];
-
-  orderCities: any[] = [];
+  totalItem: number = 0;
+  pageNum: number = 0;
+  first: number = 0;
 
   constructor(
     private readonly apiService: ApiService,
@@ -91,9 +85,9 @@ export class SearchComponent implements OnInit {
   getData() {
     let parameters: Map<string, any> = new Map();
     parameters.set("name", this.dataService.getSearchName());
-    parameters.set("pageSize", 10);
-    parameters.set("currentPage", 1);
-  
+    parameters.set("pageSize", 9);
+    parameters.set("currentPage", this.pageNum + 1);
+
     this.apiService
       .post(ApiUrls.URL_GET_ALL_PRODUCTS,[], parameters)
       .subscribe(
@@ -102,6 +96,7 @@ export class SearchComponent implements OnInit {
           const message = response.message;
           if (code === 200) {
             this.products = response.data.list;
+            this.totalItem =  response.data.totalElement;
           } else {
             this.error = message;
           }
@@ -114,19 +109,15 @@ export class SearchComponent implements OnInit {
     this.dataService.setSearchName("");
   }
 
-  onSortChange(event: any) {
-    const value = event.value;
-
-    if (value.indexOf('!') === 0) {
-      this.sortOrder = -1;
-      this.sortField = value.substring(1, value.length);
-    } else {
-      this.sortOrder = 1;
-      this.sortField = value;
-    }
-  }
-
   onFilter(dv: DataView, event: Event) {
     dv.filter((event.target as HTMLInputElement).value);
+  }
+
+  onPageChange(event: PaginatorState) {
+    if (event.page || event.page === 0) {
+      this.pageNum = event.page;
+      this.first = (this.pageNum) * 9;
+    }
+    this.getData();
   }
 }
