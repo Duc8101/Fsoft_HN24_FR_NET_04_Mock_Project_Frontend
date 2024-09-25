@@ -44,7 +44,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     InputNumberModule,
     PaginatorModule,
     DialogModule,
-    ReactiveFormsModule 
+    ReactiveFormsModule
   ],
   providers: [MessageService],
   templateUrl: './manage-product.component.html',
@@ -99,7 +99,7 @@ export class ManageProductComponent implements OnInit {
 
   form: FormGroup;
 
-  constructor(private readonly apiService: ApiService,private messageService: MessageService) { 
+  constructor(private readonly apiService: ApiService, private messageService: MessageService) {
     this.form = new FormGroup({
       quantity: new FormControl('', [Validators.required]),
       productName: new FormControl('', [Validators.required]),
@@ -113,7 +113,7 @@ export class ManageProductComponent implements OnInit {
   onPageChange(event: PaginatorState) {
     if (event.page || event.page === 0) {
       this.pageNum = event.page;
-      this.first = (this.pageNum) * 9;
+      this.first = (this.pageNum) * 10;
     }
     this.getListProduct();
   }
@@ -125,40 +125,40 @@ export class ManageProductComponent implements OnInit {
   }
 
   openNew() {
-      this.product = {
-        productId: 0,
-        categoryName: "",
-        productName: "",
-        image: "",
-        price: 0,
-        categoryId: 0,
-        quantity: 0,
-        description: "",
-        rate: 0
-      };
-      this.submitted = false;
-      this.productDialog = true;
-      this.isUpdate = false;
+    this.product = {
+      productId: 0,
+      categoryName: "",
+      productName: "",
+      image: "",
+      price: 0,
+      categoryId: 0,
+      quantity: 0,
+      description: "",
+      rate: 0
+    };
+    this.submitted = false;
+    this.productDialog = true;
+    this.isUpdate = false;
   }
 
   deleteSelectedProducts() {
-      this.deleteProductsDialog = true;
+    this.deleteProductsDialog = true;
   }
 
   openUpdateProduct(productUpdate: Product) {
-      this.productDialog = true;
-      this.isUpdate = true; 
-      this.product.productId = productUpdate.productId;
-      this.product.productName = productUpdate.productName;
-      this.product.categoryId = productUpdate.categoryId;
-      this.product.categoryName = productUpdate.categoryName;
-      this.product.image = productUpdate.image;
-      this.product.description = productUpdate.description;
-      this.product.quantity = productUpdate.quantity;
-      this.product.price = productUpdate.price;
+    this.productDialog = true;
+    this.isUpdate = true;
+    this.product.productId = productUpdate.productId;
+    this.product.productName = productUpdate.productName;
+    this.product.categoryId = productUpdate.categoryId;
+    this.product.categoryName = productUpdate.categoryName;
+    this.product.image = productUpdate.image;
+    this.product.description = productUpdate.description;
+    this.product.quantity = productUpdate.quantity;
+    this.product.price = productUpdate.price;
   }
 
-  openDeleteProduct(productDelete: Product){
+  openDeleteProduct(productDelete: Product) {
     this.deleteProductDialog = true;
     this.product.productId = productDelete.productId;
     this.product.productName = productDelete.productName;
@@ -172,13 +172,13 @@ export class ManageProductComponent implements OnInit {
 
 
   confirmDeleteSelected() {
-      this.deleteProductsDialog = false;
+    this.deleteProductsDialog = false;
   }
 
 
   hideDialog() {
-      this.productDialog = false;
-      this.submitted = false;
+    this.productDialog = false;
+    this.submitted = false;
   }
 
   showSuccess(action: string) {
@@ -224,7 +224,7 @@ export class ManageProductComponent implements OnInit {
   //     }
   // }
 
-  getListProduct(){
+  getListProduct() {
     let parameters: Map<string, any> = new Map();
     parameters.set("name", this.name);
     parameters.set("pageSize", 10);
@@ -232,7 +232,7 @@ export class ManageProductComponent implements OnInit {
 
 
     this.apiService
-      .post(ApiUrls.URL_GET_ALL_PRODUCTS,[], parameters)
+      .post(ApiUrls.URL_GET_ALL_PRODUCTS, [], parameters)
       .subscribe(
         (response) => {
           const code = response.code;
@@ -249,10 +249,10 @@ export class ManageProductComponent implements OnInit {
         }
       );
   };
-  
-  getListCategory(){
+
+  getListCategory() {
     this.apiService
-      .get(ApiUrls.URL_GET_ALL_CATEGORIES,null)
+      .get(ApiUrls.URL_GET_ALL_CATEGORIES, null)
       .subscribe(
         (response) => {
           const code = response.code;
@@ -270,10 +270,10 @@ export class ManageProductComponent implements OnInit {
       );
   };
 
-  createProduct(){
+  createProduct() {
     this.submitted = true;
     this.apiService
-      .post(ApiUrls.URL_CREATE_PRODUCT,this.product,null)
+      .post(ApiUrls.URL_CREATE_PRODUCT, this.product, null)
       .subscribe(
         (response) => {
           const code = response.code;
@@ -290,24 +290,26 @@ export class ManageProductComponent implements OnInit {
           console.error('Có lỗi xảy ra : ', error);
         }
       );
-      this.products = [...this.products];
-          this.productDialog = false;
-          this.product = {productId: 0,
-            categoryName: "",
-            productName: "",
-            image: "",
-            price: 0,
-            categoryId: 0,
-            rate: 0,
-            quantity: 0,
-            description: ""};
+    this.products = [...this.products];
+    this.productDialog = false;
+    this.product = {
+      productId: 0,
+      categoryName: "",
+      productName: "",
+      image: "",
+      price: 0,
+      categoryId: 0,
+      rate: 0,
+      quantity: 0,
+      description: ""
+    };
   }
 
-  updateProduct(){
+  updateProduct() {
     this.submitted = true;
     console.log(this.product)
     this.apiService
-      .put(ApiUrls.URL_UPDATE_PRODUCT+"/"+this.product.productId,this.product)
+      .put(ApiUrls.URL_UPDATE_PRODUCT + "/" + this.product.productId, this.product)
       .subscribe(
         (response) => {
           const code = response.code;
@@ -324,23 +326,25 @@ export class ManageProductComponent implements OnInit {
           console.error('Có lỗi xảy ra : ', error);
         }
       );
-      this.products = [...this.products];
-          this.productDialog = false;
-          this.product = {productId: 0,
-            categoryName: "",
-            productName: "",
-            image: "",
-            price: 0,
-            categoryId: 0,
-            rate: 0,
-            quantity: 0,
-            description: ""};
-    
+    this.products = [...this.products];
+    this.productDialog = false;
+    this.product = {
+      productId: 0,
+      categoryName: "",
+      productName: "",
+      image: "",
+      price: 0,
+      categoryId: 0,
+      rate: 0,
+      quantity: 0,
+      description: ""
+    };
+
   };
 
-  deleteProduct(id: number){
+  deleteProduct(id: number) {
     this.apiService
-      .delete(ApiUrls.URL_DELETE_PRODUCT+"/"+id,null)
+      .delete(ApiUrls.URL_DELETE_PRODUCT + "/" + id, null)
       .subscribe(
         (response) => {
           const code = response.code;
@@ -359,7 +363,7 @@ export class ManageProductComponent implements OnInit {
         }
       );
 
-      this.deleteProductDialog = false;
+    this.deleteProductDialog = false;
   }
 
 
@@ -367,4 +371,53 @@ export class ManageProductComponent implements OnInit {
     this.name = (event.target as HTMLInputElement).value;
     this.getListProduct();
   }
+
+  displayFeedbackList: boolean = false;
+  feedbacks: any[] = [];
+  replyContent: string = '';
+  selectedFeedback: any;
+  displayReplyModal: boolean = false;
+
+  getFeedBack(productId: number){
+    let parameters: Map<string, any> = new Map();
+    parameters.set("productId", productId);
+
+    this.apiService
+      .get('http://localhost:5125/Feedback/get-feedbacks-by-product-id', parameters)
+      .subscribe(
+        (response) => {
+          const code = response.code;
+          const message = response.message;
+          if (code === 200) {
+            this.feedbacks = response.data;
+            this.displayFeedbackList = true
+          } else {
+            this.error = message;
+          }
+        },
+
+        (error) => {
+          console.error('Có lỗi xảy ra : ', error);
+        }
+      );
+  }
+
+  // Hàm xử lý khi nhấn nút Reply
+  replyToFeedback(feedback: any) {
+    console.log('Reply to:', feedback);
+    // Xử lý logic trả lời phản hồi tại đây
+    // Có thể mở một modal khác hoặc điều hướng tới form reply
+  }
+
+    // Hàm mở modal reply khi nhấn vào Reply
+    openReplyModal(feedback: any) {
+      this.selectedFeedback = feedback;  // Lưu feedback được chọn
+      this.displayReplyModal = true;     // Mở modal reply
+    }
+  
+    // Hàm gửi phản hồi
+    submitReply() {
+      this.displayReplyModal = false;
+      this.replyContent = '';
+    }
 }

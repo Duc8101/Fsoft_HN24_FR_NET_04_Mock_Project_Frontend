@@ -21,6 +21,7 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { DialogModule } from 'primeng/dialog';
 import { ToastService } from '../../../services/toastService';
 import { OrderDetail } from '../../../models/orderDetail';
+import { RatingModule } from 'primeng/rating';
 
 @Component({
   selector: 'app-customer-orders-management',
@@ -39,7 +40,8 @@ import { OrderDetail } from '../../../models/orderDetail';
     FormsModule,
     PaginatorModule,
     ConfirmPopupModule,
-    DialogModule
+    DialogModule,
+    RatingModule,
   ],
   templateUrl: './customer-orders-management.component.html',
   styleUrl: './customer-orders-management.component.scss',
@@ -56,9 +58,7 @@ export class CustomerOrdersManagementComponent implements OnInit {
 
   tabs: string[] = [];
   orderList: OrderDto[] = [];
-
   orderDetail: OrderDetail[] = [];
-
   selectStatus?: string = "";
   totalItem: number = 0;
   pageNum: number = 0;
@@ -67,6 +67,10 @@ export class CustomerOrdersManagementComponent implements OnInit {
   totalPrice: number = 0;
   visible: boolean = false;
   currentOrderId: number = 0;
+  displayFeedbackModal: boolean = false;
+  rating: number = 5;
+  comment: string = '';
+  currentOrderDetailId : number = 0;
 
   ngOnInit() {
     this.tabs = [
@@ -108,7 +112,7 @@ export class CustomerOrdersManagementComponent implements OnInit {
       );
   }
 
-  getOrderDetail(orderId : number){
+  getOrderDetail(orderId: number) {
     // get order detail;
     this.currentOrderId = orderId;
     this.apiService
@@ -133,7 +137,6 @@ export class CustomerOrdersManagementComponent implements OnInit {
   }
 
   onTabChange() {
-    console.log(this.activeIndex);
     switch (this.activeIndex) {
       case 0:
         this.selectStatus = "";
@@ -151,7 +154,7 @@ export class CustomerOrdersManagementComponent implements OnInit {
         this.selectStatus = "Done";
         break;
       case 5:
-        this.selectStatus = "Ship_Fail";
+        this.selectStatus = "Ship Failed";
         break;
       default:
         this.selectStatus = "All";
@@ -191,5 +194,50 @@ export class CustomerOrdersManagementComponent implements OnInit {
 
   showDialog() {
     this.visible = true;
+  }
+
+  showFeedback(orderDetailId : number){
+    this.displayFeedbackModal = true;
+    this.currentOrderDetailId = orderDetailId;
+  }
+
+  // Gửi phản hồi
+  submitFeedback() {
+    // Bạn có thể xử lý dữ liệu phản hồi tại đây (gửi về server, lưu vào database,...)
+    let body = {
+      comment: this.comment,
+      orderDetailId: this.currentOrderDetailId,
+      rate: this.rating,
+    }
+
+    this.apiService
+      .post('http://localhost:5125/Feedback/create-feedback', body, null)
+      .subscribe(
+        (response) => {
+          const code = response.code;
+          const message = response.message;
+          if (code === 200) {
+            this.toastService.showSuccess("Feedback success!")
+            this.getOrderDetail(this.currentOrderId);
+          } else {
+            this.toastService.showError(message)
+          }
+        },
+
+        (error) => {
+          this.toastService.showError("Something went wrong!")
+        }
+      );
+
+
+    // Đóng modal sau khi gửi phản hồi
+    this.displayFeedbackModal = false;
+    this.clearFeedback();
+  }
+
+  // Xóa dữ liệu phản hồi sau khi đóng modal
+  clearFeedback() {
+    this.rating = 5;
+    this.comment = '';
   }
 }

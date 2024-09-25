@@ -6,5 +6,6 @@ export interface OrderDetail {
     productName: string,
     image: string,
     price: number,
-    quantity: number
+    quantity: number,
+    isFeedback: boolean
  }
