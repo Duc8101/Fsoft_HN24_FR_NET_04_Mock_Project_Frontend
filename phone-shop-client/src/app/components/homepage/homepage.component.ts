@@ -153,30 +153,30 @@ export class HomepageComponent implements OnInit {
     this.getAllProduct();
   }
 
-  addToCart(id: string){
+  addToCart(id: string) {
     let body = {
       productId: id
     }
 
     console.log(id)
     this.apiService
-    .post(ApiUrls.URL_CART_CREATE,body, null)
-    .subscribe(
-      (response) => {
-        const code = response.code;
-        const message = response.message;
-        if (code === 200) {
-          this.dataService.setListCart();
-          this.toastService.showSuccess("Add to cart success!");
-        } else {
-          this.toastService.showError(message);
-        }
-      },
+      .post(ApiUrls.URL_CART_CREATE, body, null)
+      .subscribe(
+        (response) => {
+          const code = response.code;
+          const message = response.message;
+          if (code === 200) {
+            this.dataService.setListCart();
+            this.toastService.showSuccess("Add to cart success!");
+          } else {
+            this.toastService.showError(message);
+          }
+        },
 
-      (error) => {
-        this.toastService.showError("Something went wrong!");
-      }
-    );
+        (error) => {
+          this.toastService.showError("Something went wrong!");
+        }
+      );
   }
 
   goProductDetail(productId: number){
