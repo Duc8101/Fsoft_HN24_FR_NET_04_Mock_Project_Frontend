@@ -78,7 +78,7 @@ export class AllProductComponent implements OnInit {
     this.getCategories();
   }
 
-  addToCart(id: string) {
+  addToCart(id: number) {
     let body = {
       productId: id
     }

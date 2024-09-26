@@ -59,7 +59,7 @@ private toastService: ToastService
     });
   }
 
-  addToCart(id: string){
+  addToCart(id: number){
     let body = {
       productId: id
     }

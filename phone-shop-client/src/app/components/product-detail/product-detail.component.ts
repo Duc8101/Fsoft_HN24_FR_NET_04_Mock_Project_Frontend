@@ -76,7 +76,7 @@ export class ProductDetailComponent implements OnInit {
       );
   }
 
-  addToCart(id: string) {
+  addToCart(id: number) {
     let body = {
       productId: id
     }

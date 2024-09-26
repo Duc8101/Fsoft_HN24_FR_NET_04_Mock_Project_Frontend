@@ -19,6 +19,7 @@ import { InputTextareaModule } from "primeng/inputtextarea";
 import { InputTextModule } from "primeng/inputtext";
 import { Table, TableModule } from 'primeng/table';
 import { ToastService } from '../../../services/toastService';
+import { DataService } from '../../../services/data.service';
 
 @Component({
   selector: 'app-checkout',
@@ -58,7 +59,8 @@ export class CheckoutComponent {
 
   constructor(private router: Router,
     private readonly apiService: ApiService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private dataService: DataService
   ) { 
     const navigation = this.router.getCurrentNavigation();
     this.cartitems = navigation?.extras?.state?.['products'] || [];
@@ -101,6 +103,7 @@ export class CheckoutComponent {
         const message = response.message;
         if (code === 200) {
           this.toastService.showSuccess("Check out success!");
+          this.dataService.setListCart();
           this.router.navigate(['/customer-orders-management']);
         } else {
           this.toastService.showError(message);

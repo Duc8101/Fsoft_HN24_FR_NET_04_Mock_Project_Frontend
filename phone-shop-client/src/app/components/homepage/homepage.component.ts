@@ -153,7 +153,7 @@ export class HomepageComponent implements OnInit {
     this.getAllProduct();
   }
 
-  addToCart(id: string) {
+  addToCart(id: number) {
     let body = {
       productId: id
     }
