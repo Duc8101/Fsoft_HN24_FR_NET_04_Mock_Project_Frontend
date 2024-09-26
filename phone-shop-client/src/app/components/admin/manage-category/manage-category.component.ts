@@ -177,6 +177,8 @@ export class ManageCategoryComponent implements OnInit {
   };
 
   createCategory(){
+    console.log(this.category);
+    
     this.submitted = true;
     this.apiService
       .post(ApiUrls.URL_CREATE_CATEGORY,this.category,null)

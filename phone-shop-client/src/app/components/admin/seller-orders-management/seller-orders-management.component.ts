@@ -250,6 +250,7 @@ export class SellerOrdersManagementComponent implements OnInit {
 
   // Khi người dùng từ chối thay đổi
   rejectChange() {
+    this.getOrders();
     this.displayConfirmation = false;  // Đóng dialog
     this.note = '';
     this.selectedOrder = null;

@@ -58,6 +58,30 @@ export class CustomerTopbarComponent implements OnInit {
             ]
         }
     ];
+
+    if (this.getRoleUser() == 'Admin'){
+      this.items = [
+        {
+            label: 'Options',
+            items: [
+                {
+                    label: 'User-Profile',
+                    icon: 'pi pi-user-edit',
+                    command: () => {
+                      this.router.navigate(['/user-profile']);
+                    }
+                },
+                {
+                    label: 'Logout',
+                    icon: 'pi pi-sign-out',
+                    command: () => {
+                      this.logout();
+                    }
+                }
+            ]
+        }
+    ];
+    }
   }
 
   searchProduct() {

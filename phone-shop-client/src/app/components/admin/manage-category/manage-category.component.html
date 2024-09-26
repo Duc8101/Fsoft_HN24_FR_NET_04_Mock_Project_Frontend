@@ -71,7 +71,7 @@
                 <form [formGroup]="form">
                     <div class="field">
                         <label for="name">Category Name</label>
-                        <input type="text" pInputText id="name"  required autofocus formControlName="categoryName"/>
+                        <input type="text" pInputText id="name" [(ngModel)]="category.categoryName" required autofocus formControlName="categoryName"/>
                         <div class="text-red-800" *ngIf="form.get('categoryName')?.invalid && form.get('categoryName')?.touched">
                             Category Name is required
                           </div>
