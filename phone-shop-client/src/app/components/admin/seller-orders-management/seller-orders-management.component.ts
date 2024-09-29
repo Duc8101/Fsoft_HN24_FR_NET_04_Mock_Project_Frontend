@@ -117,6 +117,60 @@ export class SellerOrdersManagementComponent implements OnInit {
       );
   }
 
+  getListStatus(status: string): string[] {
+    switch (status) {
+      case "Pending":
+        {
+        let listStaus: string[] = [
+          "Pending",
+          "Rejected",
+          "Approved"
+        ];
+        return listStaus;
+      }
+      case "Rejected":
+        {
+          let listStaus: string[] = [
+            "Rejected",
+          ];
+          return listStaus;
+        }
+      case "Approved":
+        {
+          let listStaus: string[] = [
+            "Approved",
+            "Done",
+          ];
+          return listStaus;
+        }
+      case "Done":
+        {
+          let listStaus: string[] = [
+            "Done",
+          ];
+          return listStaus;
+        }
+      case "Ship Failed":
+        {
+          let listStaus: string[] = [
+            "Ship Failed"
+          ];
+          return listStaus;
+        }
+      default:
+        {
+          let listStaus: string[] = [
+            "Pending",
+            "Rejected",
+            "Approved",
+            "Done",
+            "Ship Failed"
+          ];
+          return listStaus;
+        }
+    }
+  }
+
   getOrderDetail(orderId: number) {
     // get order detail;
     this.currentOrderId = orderId;

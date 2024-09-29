@@ -80,7 +80,7 @@ private toastService: ToastService
       },
 
       (error) => {
-        console.error('Có lỗi xảy ra : ', error);
+        this.toastService.showError("You must login to add a product to cart!");
       }
     );
   }

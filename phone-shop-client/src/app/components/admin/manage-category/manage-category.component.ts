@@ -144,11 +144,11 @@ export class ManageCategoryComponent implements OnInit {
   }
 
   showSuccess(action: string) {
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: action + ' Successful' });
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: action});
   }
 
   showError(action: string) {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: action + ' Failed' });
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: action });
   }
   
   getListCategory(){
@@ -188,10 +188,10 @@ export class ManageCategoryComponent implements OnInit {
           const message = response.message;
           if (code === 200) {
             this.getListCategory();
-            this.showSuccess("Add Category");
+            this.showSuccess("Add Category successful!");
           } else {
             this.error = message;
-            this.showError("Add Category");
+            this.showError("Add Category successful!");
           }
         },
         (error) => {
@@ -217,10 +217,10 @@ export class ManageCategoryComponent implements OnInit {
           const message = response.message;
           if (code === 200) {
             this.getListCategory();
-            this.showSuccess("Update Category");
+            this.showSuccess("Update Category successful!");
           } else {
             this.error = message;
-            this.showError("Update Category");
+            this.showError("Update Category successful!");
           }
         },
         (error) => {
@@ -246,10 +246,10 @@ export class ManageCategoryComponent implements OnInit {
           console.log(message);
           if (code === 200) {
             this.getListCategory();
-            this.showSuccess("Delete Category");
+            this.showSuccess(message);
           } else {
             this.error = message;
-            this.showError("Delete Category");
+            this.showError(message);
           }
         },
         (error) => {

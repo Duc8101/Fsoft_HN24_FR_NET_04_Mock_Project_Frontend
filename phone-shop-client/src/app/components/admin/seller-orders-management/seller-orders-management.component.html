@@ -23,7 +23,8 @@
                 </td>
                 <td class="p-fluid" style="width:10%; min-width:7rem;">
                     <span class="p-column-title">Status</span>
-                    <p-dropdown [options]="statusEnum" [ngModel]="order.status" placeholder="Status" appendTo="body"
+                    <p-dropdown [disabled]="order.status === 'Done' || order.status === 'Ship Failed' || order.status === 'Rejected'"
+                     [options]="getListStatus(order.status)" [ngModel]="order.status" placeholder="Status" appendTo="body"
                         (onChange)="onStatusChange($event, order)"></p-dropdown>
                 </td>
                 <td style="width:30%; min-width:8rem;">

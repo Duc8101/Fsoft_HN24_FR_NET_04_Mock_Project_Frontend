@@ -97,7 +97,7 @@ export class ProductDetailComponent implements OnInit {
         },
 
         (error) => {
-          this.toastService.showError("Something went wrong!");
+          this.toastService.showError("You must login to add a product to cart!");
         }
       );
   }
